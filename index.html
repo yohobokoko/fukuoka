@@ -87,23 +87,6 @@
 </head>
 <body>
 
-    <!-- Header Actions -->
-    <div class="fixed top-4 right-4 no-print z-50 flex gap-2">
-        <button id="edit-toggle-btn" onclick="toggleEditMode()" class="bg-blue-600 text-white px-4 py-2 rounded-full shadow-lg hover:bg-blue-700 flex items-center gap-2 font-bold transition text-sm">
-            ✏️ 編輯行程
-        </button>
-        <button onclick="downloadJson()" class="bg-gray-600 text-white px-4 py-2 rounded-full shadow-lg hover:bg-gray-700 flex items-center gap-2 font-bold transition text-sm" title="備份設定">
-            📥 備份
-        </button>
-         <label for="upload-json" class="bg-gray-600 text-white px-4 py-2 rounded-full shadow-lg hover:bg-gray-700 flex items-center gap-2 font-bold transition text-sm cursor-pointer" title="還原設定">
-            📤 還原
-            <input type="file" id="upload-json" accept=".json" class="hidden" onchange="uploadJson(this)">
-        </label>
-        <button onclick="window.print()" class="bg-gray-800 text-white px-4 py-2 rounded-full shadow-lg hover:bg-gray-900 flex items-center gap-2 font-bold transition text-sm">
-            🖨️ 列印
-        </button>
-    </div>
-
     <!-- AI Toggle Button -->
     <div id="ai-toggle-btn" class="no-print" onclick="toggleChat()">✨</div>
 
@@ -116,8 +99,8 @@
         <div id="chat-messages">
             <div class="message ai-msg">
                 哈囉！我是您的九州 AI 導遊。<br>
-                這個版本已經幫您把「待辦事項」和「伴手禮」頁面的天數選擇器隱藏囉！<br>
-                畫面看起來更清爽了！🌿
+                行李檢查表已經幫您合併到「待辦事項」囉！<br>
+                畫面更乾淨了，祝您旅途愉快！🌿
             </div>
         </div>
         <div class="typing-indicator" id="typing-indicator">Gemini 正在查詢...</div>
@@ -130,6 +113,11 @@
     <div class="page-container" id="brochure-content">
         <!-- Cover -->
         <div class="text-center border-b-2 border-dashed border-gray-300 pb-8 mb-8 relative pt-10">
+            <!-- Edit Button moved inside content flow -->
+            <button id="edit-toggle-btn" onclick="toggleEditMode()" class="absolute top-0 right-0 bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-xs hover:bg-blue-100 transition no-print border border-blue-200">
+                ✏️ 編輯行程
+            </button>
+            
             <h1 class="text-4xl font-bold text-yellow-900 mb-2 tracking-wide">王家北九州六日行</h1>
             <p class="text-gray-600 text-lg font-medium">大分 ✕ 別府 ✕ 柳川 ✕ 福岡</p>
         </div>
@@ -142,21 +130,11 @@
         </nav>
 
         <main class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            <!-- Sidebar -->
-            <aside class="lg:col-span-3 space-y-6">
-                <div id="day-selector-block" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sticky top-24">
+            <!-- Sidebar (Only Day Selection now) -->
+            <aside class="lg:col-span-3 space-y-6" id="sidebar-container">
+                <div id="day-selector-block" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sticky top-6">
                     <h3 class="text-gray-500 text-xs font-bold uppercase tracking-wider mb-3">選擇天數</h3>
                     <div class="grid grid-cols-2 gap-2 lg:grid-cols-1" id="day-nav"></div>
-                </div>
-                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 hidden lg:block sticky top-[450px]">
-                    <div class="flex justify-between items-center mb-3">
-                        <h3 class="text-gray-500 text-xs font-bold uppercase tracking-wider">行李檢查</h3>
-                        <span id="pack-progress" class="text-xs font-bold text-orange-500">0/0</span>
-                    </div>
-                    <ul id="packing-list-sidebar" class="space-y-2 max-h-60 overflow-y-auto text-sm"></ul>
-                    <div id="add-pack-item-container" class="mt-2 hidden">
-                        <input type="text" id="new-pack-item" placeholder="新增物品..." class="edit-input" onkeypress="if(event.key==='Enter') addPackItem()">
-                    </div>
                 </div>
             </aside>
 
@@ -223,17 +201,10 @@
                     </ul>
                 </div>
             </div>
-
-            <!-- Sketch Note -->
-            <div class="sketch-box p-6 mt-6">
-                <div class="sketch-pin"></div>
-                <h3 class="font-bold text-gray-700 mb-2 text-center">🎒 必帶物品提醒</h3>
-                <div class="text-sm text-gray-600 text-center leading-relaxed space-y-1">
-                    <p>✅ <b>護照</b> (效期需6個月以上)</p>
-                    <p>✅ <b>VJW 截圖</b> (入境審查用)</p>
-                    <p>✅ <b>日幣現金</b> (搭船、屋台、小店用)</p>
-                    <p>✅ <b>好走的鞋子</b> (每天都要走很多路！)</p>
-                </div>
+            
+            <div class="bg-white p-6 rounded-2xl border-2 border-dashed border-orange-200 shadow-sm text-center">
+                 <h3 class="font-bold text-gray-700 mb-2">🎒 出發前記得確認</h3>
+                 <p class="text-sm text-gray-500">護照、VJW 截圖、日幣現金、好走的鞋子！</p>
             </div>
         </div>
     </template>
@@ -264,15 +235,15 @@
         <div class="space-y-6 animate-fade-in fade-enter">
             <div class="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 relative overflow-hidden">
                  <div class="relative z-10">
-                    <h2 class="text-3xl font-bold text-green-700 mb-2">📝 待辦事項清單</h2>
-                    <p class="text-gray-500">行前準備、預約提醒、購物備忘錄</p>
+                    <h2 class="text-3xl font-bold text-green-700 mb-2">📝 待辦事項 & 行李清單</h2>
+                    <p class="text-gray-500">行前準備、預約提醒、必帶物品</p>
                 </div>
                 <div class="absolute top-0 right-0 w-32 h-32 bg-green-100 rounded-full mix-blend-multiply filter blur-3xl opacity-50 transform translate-x-10 -translate-y-10"></div>
             </div>
 
             <!-- Add Todo Input -->
             <div class="flex gap-2">
-                <input type="text" id="new-todo-input" placeholder="輸入待辦事項 (例如: 預約燒肉)..." class="todo-input shadow-sm" onkeypress="if(event.key==='Enter') addTodo()">
+                <input type="text" id="new-todo-input" placeholder="輸入待辦事項..." class="todo-input shadow-sm" onkeypress="if(event.key==='Enter') addTodo()">
                 <button onclick="addTodo()" class="bg-green-600 text-white px-6 py-2 rounded-lg font-bold hover:bg-green-700 transition shadow-sm whitespace-nowrap">新增</button>
             </div>
 
@@ -461,6 +432,7 @@
                     ]
                 }
             ],
+            // Merged Packing List into Todo List for initial load
             packingList: [
                 "護照 (效期需6個月以上)",
                 "VJW (Visit Japan Web) 截圖",
@@ -471,6 +443,15 @@
                 "輕便購物袋 (環保袋)"
             ],
             todoList: {
+                "🎒 行李清單": [
+                    {text: "護照 (效期需6個月以上)", done: false},
+                    {text: "VJW (Visit Japan Web) 截圖", done: false},
+                    {text: "日幣現金 (屋台/交通卡用)", done: false},
+                    {text: "行動電源 & 充電線", done: false},
+                    {text: "網卡 / Roaming", done: false},
+                    {text: "好走的鞋子 (步數很多)", done: false},
+                    {text: "輕便購物袋 (環保袋)", done: false}
+                ],
                 "行前準備": [
                     {text: "確認護照效期", done: false},
                     {text: "填寫 VJW 入境審查", done: false},
@@ -494,14 +475,17 @@
 
         const mainContent = document.getElementById('main-content');
         const dayNav = document.getElementById('day-nav');
-        const packingListEl = document.getElementById('packing-list-sidebar');
-        const packProgressEl = document.getElementById('pack-progress');
+        // Note: packingListEl is removed from sidebar
         const addPackItemContainer = document.getElementById('add-pack-item-container');
-        const daySelectorBlock = document.getElementById('day-selector-block');
+        const sidebarContainer = document.getElementById('sidebar-container');
 
         document.addEventListener('DOMContentLoaded', () => {
             renderDayNav();
-            renderPackingList();
+            // Data Migration: If old data structure, merge packing list to todo list
+            if (!tripData.todoList['🎒 行李清單'] && tripData.packingList) {
+                 tripData.todoList['🎒 行李清單'] = tripData.packingList.map(item => ({text: item, done: false}));
+                 saveData();
+            }
             switchView('info');
         });
 
@@ -522,11 +506,16 @@
                 }
             });
 
-            // Toggle Day Selector Logic
-            if (view === 'todo' || view === 'souvenir') {
-                daySelectorBlock.classList.add('hidden');
+            // Toggle Sidebar for Day Selection
+            if (view === 'todo' || view === 'souvenir' || view === 'info') {
+                sidebarContainer.classList.add('hidden');
+                // Adjust main content to full width when sidebar is hidden
+                document.getElementById('main-content').classList.remove('lg:col-span-9');
+                document.getElementById('main-content').classList.add('lg:col-span-12');
             } else {
-                daySelectorBlock.classList.remove('hidden');
+                sidebarContainer.classList.remove('hidden');
+                document.getElementById('main-content').classList.remove('lg:col-span-12');
+                document.getElementById('main-content').classList.add('lg:col-span-9');
             }
 
             if (view === 'info') renderInfo();
@@ -565,19 +554,18 @@
             isEditMode = !isEditMode;
             const btn = document.getElementById('edit-toggle-btn');
             if (isEditMode) {
-                btn.classList.replace('bg-blue-600', 'bg-green-600');
+                btn.classList.replace('bg-blue-50', 'bg-green-100');
+                btn.classList.replace('text-blue-600', 'text-green-700');
                 btn.innerText = '💾 儲存修改';
-                addPackItemContainer.classList.remove('hidden');
             } else {
-                btn.classList.replace('bg-green-600', 'bg-blue-600');
+                btn.classList.replace('bg-green-100', 'bg-blue-50');
+                btn.classList.replace('text-green-700', 'text-blue-600');
                 btn.innerText = '✏️ 編輯行程';
-                addPackItemContainer.classList.add('hidden');
-                saveData(); // Save on exit edit mode
+                saveData();
             }
             // Refresh current view
             if (currentView === 'itinerary') renderItinerary(currentDayIndex);
-            else if (currentView === 'todo') renderTodo(); // Re-render todo to show delete buttons
-            else renderPackingList(); // Re-render packing list to show delete buttons
+            else if (currentView === 'todo') renderTodo();
         };
 
         function saveData() {
@@ -610,81 +598,14 @@
             reader.readAsText(file);
         };
 
-        // --- Packing List ---
-        function renderPackingList() {
-            const savedChecks = JSON.parse(localStorage.getItem('packChecks')) || {};
-            let checkedCount = 0;
-            packingListEl.innerHTML = tripData.packingList.map((item, idx) => {
-                const isChecked = savedChecks[idx] ? 'checked' : '';
-                if(isChecked) checkedCount++;
-                
-                let deleteBtn = isEditMode ? `<span class="text-red-500 cursor-pointer ml-auto text-xs" onclick="deletePackItem(${idx})">❌</span>` : '';
-
-                return `
-                <li class="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg cursor-pointer transition">
-                    <div onclick="togglePack(${idx})" class="w-5 h-5 rounded border ${isChecked ? 'bg-green-500 border-green-500' : 'border-gray-300'} flex items-center justify-center text-white text-xs transition-colors">
-                        ${isChecked ? '✓' : ''}
-                    </div>
-                    <span onclick="togglePack(${idx})" class="${isChecked ? 'line-through text-gray-400' : 'text-gray-600'} flex-1">${item}</span>
-                    ${deleteBtn}
-                </li>
-            `}).join('');
-            packProgressEl.innerText = `${checkedCount}/${tripData.packingList.length}`;
-        }
-
-        window.togglePack = (idx) => {
-            if (isEditMode) return; // Disable toggle in edit mode to prevent conflict
-            const savedChecks = JSON.parse(localStorage.getItem('packChecks')) || {};
-            savedChecks[idx] = !savedChecks[idx];
-            localStorage.setItem('packChecks', JSON.stringify(savedChecks));
-            renderPackingList();
-        };
-
-        window.addPackItem = () => {
-            const input = document.getElementById('new-pack-item');
-            const val = input.value.trim();
-            if (val) {
-                tripData.packingList.push(val);
-                input.value = '';
-                saveData();
-                renderPackingList();
-            }
-        };
-
-        window.deletePackItem = (idx) => {
-            tripData.packingList.splice(idx, 1);
-            saveData();
-            renderPackingList();
-        };
-
         // --- Todo List Functions ---
-        
         function renderTodo() {
             const template = document.getElementById('todo-template').content.cloneNode(true);
             const container = template.getElementById('todo-container');
             
-            // Ensure todoList structure exists in data
-            if (!tripData.todoList) {
-                tripData.todoList = {
-                    "行前準備": [
-                        {text: "確認護照效期", done: false},
-                        {text: "填寫 VJW 入境審查", done: false},
-                        {text: "購買旅遊保險", done: false},
-                        {text: "預約 Wifi 機 / 網卡", done: false}
-                    ],
-                    "預約事項": [
-                        {text: "Day 3 藥院燒肉 (Nikuichi/Bakuro)", done: false},
-                        {text: "Day 5 水炊鍋 (橙)", done: false},
-                        {text: "Day 3 由布院之森車票 (提早一個月搶)", done: false}
-                    ],
-                    "購物清單": []
-                };
-            }
-
             container.innerHTML = Object.keys(tripData.todoList).map(category => {
                 const items = tripData.todoList[category];
                 const listHtml = items.map((item, idx) => {
-                    const checked = item.done ? 'checked' : '';
                     const lineThrough = item.done ? 'line-through text-gray-400' : 'text-gray-700';
                     const bg = item.done ? 'bg-green-500 border-green-500' : 'border-gray-300 bg-white';
                     
@@ -730,11 +651,10 @@
             const val = input.value.trim();
             if (!val) return;
 
-            // Default add to first category or create '未分類'
-            let targetCat = Object.keys(tripData.todoList)[0] || "未分類";
+            // Default add to first category (行李清單) if simple add
+            let targetCat = Object.keys(tripData.todoList)[0];
             
-            // Simple logic: if user types "買...", add to Shopping List if exists
-            if (val.includes("買") && tripData.todoList["購物清單"]) targetCat = "購物清單";
+            // Or maybe default to '預約事項' if user types '預約'? Simple logic can be added.
             
             if (!tripData.todoList[targetCat]) tripData.todoList[targetCat] = [];
             
