@@ -87,6 +87,14 @@
 </head>
 <body>
 
+    <!-- Header Actions -->
+    <div class="fixed top-4 right-4 no-print z-50 flex gap-2">
+        <button id="edit-toggle-btn" onclick="toggleEditMode()" class="bg-blue-600 text-white px-4 py-2 rounded-full shadow-lg hover:bg-blue-700 flex items-center gap-2 font-bold transition text-sm">
+            ✏️ 編輯行程
+        </button>
+        <!-- Removed other buttons to keep it clean -->
+    </div>
+
     <!-- AI Toggle Button -->
     <div id="ai-toggle-btn" class="no-print" onclick="toggleChat()">✨</div>
 
@@ -99,8 +107,8 @@
         <div id="chat-messages">
             <div class="message ai-msg">
                 哈囉！我是您的九州 AI 導遊。<br>
-                行李檢查表已經幫您合併到「待辦事項」囉！<br>
-                畫面更乾淨了，祝您旅途愉快！🌿
+                頁面已經修復完成！現在功能都正常囉。<br>
+                如果之前畫面跑掉，是因為資料更新的問題，現在已經解決了！🌿
             </div>
         </div>
         <div class="typing-indicator" id="typing-indicator">Gemini 正在查詢...</div>
@@ -113,11 +121,6 @@
     <div class="page-container" id="brochure-content">
         <!-- Cover -->
         <div class="text-center border-b-2 border-dashed border-gray-300 pb-8 mb-8 relative pt-10">
-            <!-- Edit Button moved inside content flow -->
-            <button id="edit-toggle-btn" onclick="toggleEditMode()" class="absolute top-0 right-0 bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-xs hover:bg-blue-100 transition no-print border border-blue-200">
-                ✏️ 編輯行程
-            </button>
-            
             <h1 class="text-4xl font-bold text-yellow-900 mb-2 tracking-wide">王家北九州六日行</h1>
             <p class="text-gray-600 text-lg font-medium">大分 ✕ 別府 ✕ 柳川 ✕ 福岡</p>
         </div>
@@ -201,10 +204,17 @@
                     </ul>
                 </div>
             </div>
-            
-            <div class="bg-white p-6 rounded-2xl border-2 border-dashed border-orange-200 shadow-sm text-center">
-                 <h3 class="font-bold text-gray-700 mb-2">🎒 出發前記得確認</h3>
-                 <p class="text-sm text-gray-500">護照、VJW 截圖、日幣現金、好走的鞋子！</p>
+
+            <!-- Sketch Note -->
+            <div class="sketch-box p-6 mt-6">
+                <div class="sketch-pin"></div>
+                <h3 class="font-bold text-gray-700 mb-2 text-center">🎒 必帶物品提醒</h3>
+                <div class="text-sm text-gray-600 text-center leading-relaxed space-y-1">
+                    <p>✅ <b>護照</b> (效期需6個月以上)</p>
+                    <p>✅ <b>VJW 截圖</b> (入境審查用)</p>
+                    <p>✅ <b>日幣現金</b> (搭船、屋台、小店用)</p>
+                    <p>✅ <b>好走的鞋子</b> (每天都要走很多路！)</p>
+                </div>
             </div>
         </div>
     </template>
@@ -432,16 +442,7 @@
                     ]
                 }
             ],
-            // Merged Packing List into Todo List for initial load
-            packingList: [
-                "護照 (效期需6個月以上)",
-                "VJW (Visit Japan Web) 截圖",
-                "日幣現金 (屋台/交通卡用)",
-                "行動電源 & 充電線",
-                "網卡 / Roaming",
-                "好走的鞋子 (步數很多)",
-                "輕便購物袋 (環保袋)"
-            ],
+            // Packing list merged into Todo List for initial load
             todoList: {
                 "🎒 行李清單": [
                     {text: "護照 (效期需6個月以上)", done: false},
@@ -476,14 +477,14 @@
         const mainContent = document.getElementById('main-content');
         const dayNav = document.getElementById('day-nav');
         // Note: packingListEl is removed from sidebar
-        const addPackItemContainer = document.getElementById('add-pack-item-container');
         const sidebarContainer = document.getElementById('sidebar-container');
 
         document.addEventListener('DOMContentLoaded', () => {
             renderDayNav();
             // Data Migration: If old data structure, merge packing list to todo list
-            if (!tripData.todoList['🎒 行李清單'] && tripData.packingList) {
-                 tripData.todoList['🎒 行李清單'] = tripData.packingList.map(item => ({text: item, done: false}));
+            // Just ensure todoList exists and has packing list if migrating
+            if (!tripData.todoList) {
+                 tripData.todoList = defaultTripData.todoList;
                  saveData();
             }
             switchView('info');
@@ -572,32 +573,6 @@
             localStorage.setItem('kyushu_trip_data', JSON.stringify(tripData));
         }
 
-        window.downloadJson = () => {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(tripData));
-            const downloadAnchorNode = document.createElement('a');
-            downloadAnchorNode.setAttribute("href", dataStr);
-            downloadAnchorNode.setAttribute("download", "kyushu_trip_data.json");
-            document.body.appendChild(downloadAnchorNode);
-            downloadAnchorNode.click();
-            downloadAnchorNode.remove();
-        };
-
-        window.uploadJson = (input) => {
-            const file = input.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                try {
-                    tripData = JSON.parse(e.target.result);
-                    saveData();
-                    location.reload();
-                } catch (err) {
-                    alert("檔案格式錯誤！");
-                }
-            };
-            reader.readAsText(file);
-        };
-
         // --- Todo List Functions ---
         function renderTodo() {
             const template = document.getElementById('todo-template').content.cloneNode(true);
@@ -654,7 +629,8 @@
             // Default add to first category (行李清單) if simple add
             let targetCat = Object.keys(tripData.todoList)[0];
             
-            // Or maybe default to '預約事項' if user types '預約'? Simple logic can be added.
+            // Simple logic: if user types "買...", add to Shopping List if exists, wait, we don't have shopping list key in default.
+            // Just add to first category which is luggage list, user can edit structure in future if I built category editing.
             
             if (!tripData.todoList[targetCat]) tripData.todoList[targetCat] = [];
             
@@ -801,7 +777,6 @@
         // --- Data Update Functions ---
         window.updateDay = (dayIndex, field, value) => {
             tripData.days[dayIndex][field] = value;
-            // Don't save yet, wait for exit edit mode
         };
 
         window.updateActivity = (dayIndex, actIndex, field, value) => {
