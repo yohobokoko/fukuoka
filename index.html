@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>王家北九州六日行 | 互動旅行手帳 (可編輯版)</title>
+    <title>王家北九州六日行 | 互動旅行手帳</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
@@ -74,6 +74,8 @@
         .edit-input:focus { outline: none; border-color: #d97706; ring: 2px solid #d97706; }
         .edit-textarea { width: 100%; min-height: 80px; resize: vertical; }
         .delete-btn { position: absolute; top: -10px; right: -10px; background: #ef4444; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 12px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.2); z-index: 20; }
+        .todo-input { border: 1px solid #e5e7eb; border-radius: 0.5rem; padding: 0.5rem 1rem; width: 100%; transition: all 0.2s; }
+        .todo-input:focus { outline: none; border-color: #d97706; ring: 2px solid #fdba74; }
     </style>
     <script>
         function imgError(image) {
@@ -114,8 +116,8 @@
         <div id="chat-messages">
             <div class="message ai-msg">
                 哈囉！我是您的九州 AI 導遊。<br>
-                這個版本可以讓您<b>自由編輯</b>行程文字和圖片喔！<br>
-                點擊右上角的「✏️ 編輯行程」試試看吧！🌿
+                這個版本已經幫您把「待辦事項」和「伴手禮」頁面的天數選擇器隱藏囉！<br>
+                畫面看起來更清爽了！🌿
             </div>
         </div>
         <div class="typing-indicator" id="typing-indicator">Gemini 正在查詢...</div>
@@ -132,16 +134,17 @@
             <p class="text-gray-600 text-lg font-medium">大分 ✕ 別府 ✕ 柳川 ✕ 福岡</p>
         </div>
 
-        <nav class="flex gap-2 mb-6">
-            <button onclick="switchView('info')" class="nav-btn bg-orange-100 text-orange-700 px-4 py-2 rounded-lg text-sm font-bold hover:bg-orange-200 transition">ℹ️ 旅程重點</button>
-            <button onclick="switchView('itinerary')" class="nav-btn bg-white text-gray-600 border border-gray-200 px-4 py-2 rounded-lg text-sm font-bold hover:bg-gray-50 transition">📅 詳細行程</button>
-            <button onclick="switchView('souvenir')" class="nav-btn bg-white text-gray-600 border border-gray-200 px-4 py-2 rounded-lg text-sm font-bold hover:bg-gray-50 transition">🎁 必買伴手禮</button>
+        <nav class="flex gap-2 mb-6 overflow-x-auto pb-2 md:pb-0">
+            <button onclick="switchView('info')" class="nav-btn flex-shrink-0 bg-orange-100 text-orange-700 px-4 py-2 rounded-lg text-sm font-bold hover:bg-orange-200 transition whitespace-nowrap">ℹ️ 旅程重點</button>
+            <button onclick="switchView('itinerary')" class="nav-btn flex-shrink-0 bg-white text-gray-600 border border-gray-200 px-4 py-2 rounded-lg text-sm font-bold hover:bg-gray-50 transition whitespace-nowrap">📅 詳細行程</button>
+            <button onclick="switchView('todo')" class="nav-btn flex-shrink-0 bg-white text-gray-600 border border-gray-200 px-4 py-2 rounded-lg text-sm font-bold hover:bg-gray-50 transition whitespace-nowrap">📝 待辦事項</button>
+            <button onclick="switchView('souvenir')" class="nav-btn flex-shrink-0 bg-white text-gray-600 border border-gray-200 px-4 py-2 rounded-lg text-sm font-bold hover:bg-gray-50 transition whitespace-nowrap">🎁 必買伴手禮</button>
         </nav>
 
         <main class="grid grid-cols-1 lg:grid-cols-12 gap-6">
             <!-- Sidebar -->
             <aside class="lg:col-span-3 space-y-6">
-                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sticky top-24">
+                <div id="day-selector-block" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sticky top-24">
                     <h3 class="text-gray-500 text-xs font-bold uppercase tracking-wider mb-3">選擇天數</h3>
                     <div class="grid grid-cols-2 gap-2 lg:grid-cols-1" id="day-nav"></div>
                 </div>
@@ -254,6 +257,29 @@
             
             <!-- Navigation Footer -->
             <div class="flex justify-between mt-8 pt-4 border-t border-gray-100" id="timeline-nav-footer"></div>
+        </div>
+    </template>
+
+    <template id="todo-template">
+        <div class="space-y-6 animate-fade-in fade-enter">
+            <div class="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 relative overflow-hidden">
+                 <div class="relative z-10">
+                    <h2 class="text-3xl font-bold text-green-700 mb-2">📝 待辦事項清單</h2>
+                    <p class="text-gray-500">行前準備、預約提醒、購物備忘錄</p>
+                </div>
+                <div class="absolute top-0 right-0 w-32 h-32 bg-green-100 rounded-full mix-blend-multiply filter blur-3xl opacity-50 transform translate-x-10 -translate-y-10"></div>
+            </div>
+
+            <!-- Add Todo Input -->
+            <div class="flex gap-2">
+                <input type="text" id="new-todo-input" placeholder="輸入待辦事項 (例如: 預約燒肉)..." class="todo-input shadow-sm" onkeypress="if(event.key==='Enter') addTodo()">
+                <button onclick="addTodo()" class="bg-green-600 text-white px-6 py-2 rounded-lg font-bold hover:bg-green-700 transition shadow-sm whitespace-nowrap">新增</button>
+            </div>
+
+            <!-- Todo Lists by Category -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="todo-container">
+                <!-- Injected by JS -->
+            </div>
         </div>
     </template>
 
@@ -443,7 +469,20 @@
                 "網卡 / Roaming",
                 "好走的鞋子 (步數很多)",
                 "輕便購物袋 (環保袋)"
-            ]
+            ],
+            todoList: {
+                "行前準備": [
+                    {text: "確認護照效期", done: false},
+                    {text: "填寫 VJW 入境審查", done: false},
+                    {text: "購買旅遊保險", done: false},
+                    {text: "預約 Wifi 機 / 網卡", done: false}
+                ],
+                "預約事項": [
+                    {text: "Day 3 藥院燒肉 (Nikuichi/Bakuro)", done: false},
+                    {text: "Day 5 水炊鍋 (橙)", done: false},
+                    {text: "Day 3 由布院之森車票 (提早一個月搶)", done: false}
+                ]
+            }
         };
 
         // --- Logic ---
@@ -458,6 +497,7 @@
         const packingListEl = document.getElementById('packing-list-sidebar');
         const packProgressEl = document.getElementById('pack-progress');
         const addPackItemContainer = document.getElementById('add-pack-item-container');
+        const daySelectorBlock = document.getElementById('day-selector-block');
 
         document.addEventListener('DOMContentLoaded', () => {
             renderDayNav();
@@ -472,7 +512,8 @@
             buttons.forEach(btn => {
                 if((view === 'info' && btn.innerText.includes('重點')) || 
                    (view === 'itinerary' && btn.innerText.includes('行程')) ||
-                   (view === 'souvenir' && btn.innerText.includes('伴手禮'))) {
+                   (view === 'souvenir' && btn.innerText.includes('伴手禮')) ||
+                   (view === 'todo' && btn.innerText.includes('待辦'))) {
                     btn.classList.remove('bg-white', 'text-gray-600', 'border-gray-200');
                     btn.classList.add('bg-orange-100', 'text-orange-700', 'border-transparent');
                 } else {
@@ -481,8 +522,16 @@
                 }
             });
 
+            // Toggle Day Selector Logic
+            if (view === 'todo' || view === 'souvenir') {
+                daySelectorBlock.classList.add('hidden');
+            } else {
+                daySelectorBlock.classList.remove('hidden');
+            }
+
             if (view === 'info') renderInfo();
             else if (view === 'souvenir') renderSouvenir();
+            else if (view === 'todo') renderTodo();
             else renderItinerary(currentDayIndex);
         };
 
@@ -527,6 +576,7 @@
             }
             // Refresh current view
             if (currentView === 'itinerary') renderItinerary(currentDayIndex);
+            else if (currentView === 'todo') renderTodo(); // Re-render todo to show delete buttons
             else renderPackingList(); // Re-render packing list to show delete buttons
         };
 
@@ -606,6 +656,99 @@
             saveData();
             renderPackingList();
         };
+
+        // --- Todo List Functions ---
+        
+        function renderTodo() {
+            const template = document.getElementById('todo-template').content.cloneNode(true);
+            const container = template.getElementById('todo-container');
+            
+            // Ensure todoList structure exists in data
+            if (!tripData.todoList) {
+                tripData.todoList = {
+                    "行前準備": [
+                        {text: "確認護照效期", done: false},
+                        {text: "填寫 VJW 入境審查", done: false},
+                        {text: "購買旅遊保險", done: false},
+                        {text: "預約 Wifi 機 / 網卡", done: false}
+                    ],
+                    "預約事項": [
+                        {text: "Day 3 藥院燒肉 (Nikuichi/Bakuro)", done: false},
+                        {text: "Day 5 水炊鍋 (橙)", done: false},
+                        {text: "Day 3 由布院之森車票 (提早一個月搶)", done: false}
+                    ],
+                    "購物清單": []
+                };
+            }
+
+            container.innerHTML = Object.keys(tripData.todoList).map(category => {
+                const items = tripData.todoList[category];
+                const listHtml = items.map((item, idx) => {
+                    const checked = item.done ? 'checked' : '';
+                    const lineThrough = item.done ? 'line-through text-gray-400' : 'text-gray-700';
+                    const bg = item.done ? 'bg-green-500 border-green-500' : 'border-gray-300 bg-white';
+                    
+                    let deleteBtn = isEditMode ? `<span class="text-red-500 cursor-pointer ml-2 text-xs" onclick="deleteTodo('${category}', ${idx})">❌</span>` : '';
+
+                    return `
+                    <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg group">
+                        <div onclick="toggleTodo('${category}', ${idx})" class="w-5 h-5 rounded border ${bg} flex items-center justify-center text-white text-xs cursor-pointer transition-colors shadow-sm">
+                            ${item.done ? '✓' : ''}
+                        </div>
+                        <span onclick="toggleTodo('${category}', ${idx})" class="${lineThrough} flex-1 cursor-pointer font-medium">${item.text}</span>
+                        ${deleteBtn}
+                    </div>
+                    `;
+                }).join('');
+
+                return `
+                <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm hover-card">
+                    <h3 class="font-bold text-lg text-gray-800 mb-4 border-b pb-2 border-green-100 flex justify-between items-center">
+                        ${category}
+                        <span class="text-xs font-normal text-gray-400 bg-gray-100 px-2 py-1 rounded-full">${items.filter(i=>i.done).length}/${items.length}</span>
+                    </h3>
+                    <div class="space-y-2">
+                        ${listHtml || '<p class="text-gray-400 text-sm italic">尚無待辦事項</p>'}
+                    </div>
+                </div>
+                `;
+            }).join('');
+
+            mainContent.innerHTML = '';
+            mainContent.appendChild(template);
+        }
+
+        window.toggleTodo = (category, index) => {
+            if (isEditMode) return;
+            tripData.todoList[category][index].done = !tripData.todoList[category][index].done;
+            saveData();
+            renderTodo();
+        };
+
+        window.addTodo = () => {
+            const input = document.getElementById('new-todo-input');
+            const val = input.value.trim();
+            if (!val) return;
+
+            // Default add to first category or create '未分類'
+            let targetCat = Object.keys(tripData.todoList)[0] || "未分類";
+            
+            // Simple logic: if user types "買...", add to Shopping List if exists
+            if (val.includes("買") && tripData.todoList["購物清單"]) targetCat = "購物清單";
+            
+            if (!tripData.todoList[targetCat]) tripData.todoList[targetCat] = [];
+            
+            tripData.todoList[targetCat].push({ text: val, done: false });
+            input.value = '';
+            saveData();
+            renderTodo();
+        };
+
+        window.deleteTodo = (category, index) => {
+            tripData.todoList[category].splice(index, 1);
+            saveData();
+            renderTodo();
+        }
 
         // --- Render Views ---
 
