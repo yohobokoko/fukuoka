@@ -74,7 +74,7 @@
         .edit-input:focus { outline: none; border-color: #d97706; ring: 2px solid #d97706; }
         .edit-textarea { width: 100%; min-height: 80px; resize: vertical; }
         .delete-btn { position: absolute; top: -10px; right: -10px; background: #ef4444; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 12px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.2); z-index: 20; }
-        .todo-input { border: 1px solid #e5e7eb; border-radius: 0.5rem; padding: 0.5rem 1rem; width: 100%; transition: all 0.2s; }
+        .todo-input { border: 1px solid #e5e7eb; border-radius: 0.5rem; padding: 0.3rem 0.6rem; width: 100%; transition: all 0.2s; font-size: 0.9rem; }
         .todo-input:focus { outline: none; border-color: #d97706; ring: 2px solid #fdba74; }
     </style>
     <script>
@@ -92,7 +92,6 @@
         <button id="edit-toggle-btn" onclick="toggleEditMode()" class="bg-blue-600 text-white px-4 py-2 rounded-full shadow-lg hover:bg-blue-700 flex items-center gap-2 font-bold transition text-sm">
             ✏️ 編輯行程
         </button>
-        <!-- Removed other buttons to keep it clean -->
     </div>
 
     <!-- AI Toggle Button -->
@@ -107,8 +106,8 @@
         <div id="chat-messages">
             <div class="message ai-msg">
                 哈囉！我是您的九州 AI 導遊。<br>
-                頁面已經修復完成！現在功能都正常囉。<br>
-                如果之前畫面跑掉，是因為資料更新的問題，現在已經解決了！🌿
+                現在待辦事項可以直接編輯文字了！<br>
+                每個分類下方也都新增了專屬的「新增」欄位，方便您分類整理。🌿
             </div>
         </div>
         <div class="typing-indicator" id="typing-indicator">Gemini 正在查詢...</div>
@@ -251,11 +250,7 @@
                 <div class="absolute top-0 right-0 w-32 h-32 bg-green-100 rounded-full mix-blend-multiply filter blur-3xl opacity-50 transform translate-x-10 -translate-y-10"></div>
             </div>
 
-            <!-- Add Todo Input -->
-            <div class="flex gap-2">
-                <input type="text" id="new-todo-input" placeholder="輸入待辦事項..." class="todo-input shadow-sm" onkeypress="if(event.key==='Enter') addTodo()">
-                <button onclick="addTodo()" class="bg-green-600 text-white px-6 py-2 rounded-lg font-bold hover:bg-green-700 transition shadow-sm whitespace-nowrap">新增</button>
-            </div>
+            <!-- Removed Global Add Input -->
 
             <!-- Todo Lists by Category -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="todo-container">
@@ -476,13 +471,11 @@
 
         const mainContent = document.getElementById('main-content');
         const dayNav = document.getElementById('day-nav');
-        // Note: packingListEl is removed from sidebar
         const sidebarContainer = document.getElementById('sidebar-container');
 
         document.addEventListener('DOMContentLoaded', () => {
             renderDayNav();
             // Data Migration: If old data structure, merge packing list to todo list
-            // Just ensure todoList exists and has packing list if migrating
             if (!tripData.todoList) {
                  tripData.todoList = defaultTripData.todoList;
                  saveData();
@@ -584,6 +577,10 @@
                     const lineThrough = item.done ? 'line-through text-gray-400' : 'text-gray-700';
                     const bg = item.done ? 'bg-green-500 border-green-500' : 'border-gray-300 bg-white';
                     
+                    let contentHtml = isEditMode
+                        ? `<input type="text" value="${item.text}" class="edit-input flex-1" onchange="updateTodoText('${category}', ${idx}, this.value)">`
+                        : `<span onclick="toggleTodo('${category}', ${idx})" class="${lineThrough} flex-1 cursor-pointer font-medium">${item.text}</span>`;
+
                     let deleteBtn = isEditMode ? `<span class="text-red-500 cursor-pointer ml-2 text-xs" onclick="deleteTodo('${category}', ${idx})">❌</span>` : '';
 
                     return `
@@ -591,11 +588,18 @@
                         <div onclick="toggleTodo('${category}', ${idx})" class="w-5 h-5 rounded border ${bg} flex items-center justify-center text-white text-xs cursor-pointer transition-colors shadow-sm">
                             ${item.done ? '✓' : ''}
                         </div>
-                        <span onclick="toggleTodo('${category}', ${idx})" class="${lineThrough} flex-1 cursor-pointer font-medium">${item.text}</span>
+                        ${contentHtml}
                         ${deleteBtn}
                     </div>
                     `;
                 }).join('');
+
+                const addInputHtml = `
+                    <div class="mt-3 pt-3 border-t border-gray-100 flex gap-2">
+                        <input type="text" id="add-todo-${category}" placeholder="新增項目..." class="text-sm border rounded px-2 py-1 flex-1" onkeypress="if(event.key==='Enter') addTodoToCategory('${category}')">
+                        <button onclick="addTodoToCategory('${category}')" class="bg-green-100 text-green-700 px-3 py-1 rounded text-sm font-bold hover:bg-green-200">+</button>
+                    </div>
+                `;
 
                 return `
                 <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm hover-card">
@@ -606,6 +610,7 @@
                     <div class="space-y-2">
                         ${listHtml || '<p class="text-gray-400 text-sm italic">尚無待辦事項</p>'}
                     </div>
+                    ${addInputHtml}
                 </div>
                 `;
             }).join('');
@@ -620,30 +625,29 @@
             saveData();
             renderTodo();
         };
+        
+        window.updateTodoText = (category, index, val) => {
+            tripData.todoList[category][index].text = val;
+            // Don't save yet, wait for exit edit mode
+        };
 
-        window.addTodo = () => {
-            const input = document.getElementById('new-todo-input');
+        window.addTodoToCategory = (category) => {
+            const input = document.getElementById(`add-todo-${category}`);
             const val = input.value.trim();
             if (!val) return;
-
-            // Default add to first category (行李清單) if simple add
-            let targetCat = Object.keys(tripData.todoList)[0];
             
-            // Simple logic: if user types "買...", add to Shopping List if exists, wait, we don't have shopping list key in default.
-            // Just add to first category which is luggage list, user can edit structure in future if I built category editing.
-            
-            if (!tripData.todoList[targetCat]) tripData.todoList[targetCat] = [];
-            
-            tripData.todoList[targetCat].push({ text: val, done: false });
+            tripData.todoList[category].push({ text: val, done: false });
             input.value = '';
             saveData();
             renderTodo();
         };
 
         window.deleteTodo = (category, index) => {
-            tripData.todoList[category].splice(index, 1);
-            saveData();
-            renderTodo();
+            if(confirm('確定要刪除這個待辦事項嗎？')) {
+                tripData.todoList[category].splice(index, 1);
+                saveData();
+                renderTodo();
+            }
         }
 
         // --- Render Views ---
