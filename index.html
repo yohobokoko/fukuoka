@@ -66,7 +66,7 @@
         @media print {
             body { background-color: white; background-image: none; }
             .no-print { display: none !important; }
-            #chat-widget, #ai-toggle-btn { display: none !important; }
+            #chat-widget, #ai-toggle-btn, #sync-modal { display: none !important; }
         }
 
         /* Edit Mode Styles */
@@ -76,6 +76,10 @@
         .delete-btn { position: absolute; top: -10px; right: -10px; background: #ef4444; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 12px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.2); z-index: 20; }
         .todo-input { border: 1px solid #e5e7eb; border-radius: 0.5rem; padding: 0.3rem 0.6rem; width: 100%; transition: all 0.2s; font-size: 0.9rem; }
         .todo-input:focus { outline: none; border-color: #d97706; ring: 2px solid #fdba74; }
+
+        /* Sync Modal */
+        #sync-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 100; justify-content: center; align-items: center; backdrop-filter: blur(2px); }
+        .modal-content { background: white; width: 90%; max-width: 500px; padding: 2rem; border-radius: 1.5rem; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); position: relative; }
     </style>
     <script>
         function imgError(image) {
@@ -87,11 +91,33 @@
 </head>
 <body>
 
-    <!-- Header Actions -->
-    <div class="fixed top-4 right-4 no-print z-50 flex gap-2">
-        <button id="edit-toggle-btn" onclick="toggleEditMode()" class="bg-blue-600 text-white px-4 py-2 rounded-full shadow-lg hover:bg-blue-700 flex items-center gap-2 font-bold transition text-sm">
-            ✏️ 編輯行程
-        </button>
+    <!-- Sync Modal -->
+    <div id="sync-modal">
+        <div class="modal-content animate-fade-in">
+            <button onclick="closeSyncModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+            <h3 class="text-2xl font-bold text-gray-800 mb-2">☁️ 同步/備份行程</h3>
+            <p class="text-sm text-gray-500 mb-6">因為沒有伺服器，請手動複製代碼來同步裝置。</p>
+            
+            <div class="space-y-6">
+                <!-- Export Section -->
+                <div class="bg-orange-50 p-4 rounded-xl border border-orange-100">
+                    <h4 class="font-bold text-orange-800 mb-2 flex items-center gap-2">📤 步驟 1：產生代碼 (在電腦上做)</h4>
+                    <p class="text-xs text-orange-600 mb-3">修改完行程後，點擊按鈕複製代碼，並<b>傳送到手機</b>(如LINE)。</p>
+                    <button onclick="copyDataToClipboard()" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg transition flex justify-center items-center gap-2">
+                        📋 複製完整資料代碼
+                    </button>
+                </div>
+
+                <!-- Import Section -->
+                <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                    <h4 class="font-bold text-blue-800 mb-2 flex items-center gap-2">📥 步驟 2：讀取代碼 (在手機上做)</h4>
+                    <p class="text-xs text-blue-600 mb-3">複製收到的代碼，點擊按鈕貼上，即可同步。</p>
+                    <button onclick="pasteDataFromClipboard()" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition flex justify-center items-center gap-2">
+                        📋 貼上代碼並同步
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- AI Toggle Button -->
@@ -106,8 +132,8 @@
         <div id="chat-messages">
             <div class="message ai-msg">
                 哈囉！我是您的九州 AI 導遊。<br>
-                現在待辦事項可以直接編輯文字了！<br>
-                每個分類下方也都新增了專屬的「新增」欄位，方便您分類整理。🌿
+                版面已經整理過囉！現在「編輯」和「同步」按鈕都在最上方，不會擋住標題。<br>
+                行李檢查表也已經合併到「待辦事項」頁面，側邊欄更清爽了！🌿
             </div>
         </div>
         <div class="typing-indicator" id="typing-indicator">Gemini 正在查詢...</div>
@@ -118,8 +144,22 @@
     </div>
 
     <div class="page-container" id="brochure-content">
+        
+        <!-- Toolbar Actions (Moved inside container flow) -->
+        <div class="flex flex-wrap gap-2 justify-end mb-4 no-print">
+            <!-- Edit Toggle -->
+            <button id="edit-toggle-btn" onclick="toggleEditMode()" class="bg-blue-600 text-white px-3 py-2 rounded-lg shadow-sm hover:bg-blue-700 flex items-center gap-1 font-bold transition text-xs md:text-sm">
+                ✏️ 編輯
+            </button>
+            
+            <!-- Sync Button -->
+            <button onclick="openSyncModal()" class="bg-green-600 text-white px-3 py-2 rounded-lg shadow-sm hover:bg-green-700 flex items-center gap-1 font-bold transition text-xs md:text-sm">
+                ☁️ 同步
+            </button>
+        </div>
+
         <!-- Cover -->
-        <div class="text-center border-b-2 border-dashed border-gray-300 pb-8 mb-8 relative pt-10">
+        <div class="text-center border-b-2 border-dashed border-gray-300 pb-8 mb-8 relative">
             <h1 class="text-4xl font-bold text-yellow-900 mb-2 tracking-wide">王家北九州六日行</h1>
             <p class="text-gray-600 text-lg font-medium">大分 ✕ 別府 ✕ 柳川 ✕ 福岡</p>
         </div>
@@ -227,16 +267,14 @@
                 <div class="mt-4 flex gap-2" id="day-tags"></div>
             </div>
             
-            <!-- Timeline -->
+            <!-- Timeline Container with optimized spacing -->
+            <!-- Adjusted left padding to bring timeline closer to time labels -->
             <div class="relative space-y-4 before:content-[''] before:absolute before:left-[52px] md:before:left-[60px] before:top-4 before:bottom-4 before:w-0.5 before:bg-gray-200" id="timeline-container"></div>
-
-            <!-- Add Button (Edit Mode) -->
-            <button id="add-activity-btn" class="hidden w-full py-3 rounded-xl border-2 border-dashed border-gray-300 text-gray-500 hover:border-orange-400 hover:text-orange-500 transition font-bold" onclick="addActivity()">
-                + 新增行程
-            </button>
             
-            <!-- Navigation Footer -->
-            <div class="flex justify-between mt-8 pt-4 border-t border-gray-100" id="timeline-nav-footer"></div>
+            <!-- Navigation Footer for Easy Access -->
+            <div class="flex justify-between mt-8 pt-4 border-t border-gray-100" id="timeline-nav-footer">
+                <!-- Nav buttons injected by JS -->
+            </div>
         </div>
     </template>
 
@@ -249,8 +287,6 @@
                 </div>
                 <div class="absolute top-0 right-0 w-32 h-32 bg-green-100 rounded-full mix-blend-multiply filter blur-3xl opacity-50 transform translate-x-10 -translate-y-10"></div>
             </div>
-
-            <!-- Removed Global Add Input -->
 
             <!-- Todo Lists by Category -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="todo-container">
@@ -471,7 +507,9 @@
 
         const mainContent = document.getElementById('main-content');
         const dayNav = document.getElementById('day-nav');
+        // Note: packingListEl is removed from sidebar
         const sidebarContainer = document.getElementById('sidebar-container');
+        const syncModal = document.getElementById('sync-modal');
 
         document.addEventListener('DOMContentLoaded', () => {
             renderDayNav();
@@ -482,6 +520,14 @@
             }
             switchView('info');
         });
+
+        // --- Sync Modal Functions ---
+        function openSyncModal() {
+            syncModal.style.display = 'flex';
+        }
+        function closeSyncModal() {
+            syncModal.style.display = 'none';
+        }
 
         // --- View Switching ---
         window.switchView = (view) => {
@@ -548,13 +594,11 @@
             isEditMode = !isEditMode;
             const btn = document.getElementById('edit-toggle-btn');
             if (isEditMode) {
-                btn.classList.replace('bg-blue-50', 'bg-green-100');
-                btn.classList.replace('text-blue-600', 'text-green-700');
-                btn.innerText = '💾 儲存修改';
+                btn.classList.replace('bg-blue-600', 'bg-green-600');
+                btn.innerText = '💾 儲存';
             } else {
-                btn.classList.replace('bg-green-100', 'bg-blue-50');
-                btn.classList.replace('text-green-700', 'text-blue-600');
-                btn.innerText = '✏️ 編輯行程';
+                btn.classList.replace('bg-green-600', 'bg-blue-600');
+                btn.innerText = '✏️ 編輯';
                 saveData();
             }
             // Refresh current view
@@ -564,6 +608,51 @@
 
         function saveData() {
             localStorage.setItem('kyushu_trip_data', JSON.stringify(tripData));
+        }
+
+        // --- Data Transfer Logic ---
+        window.copyDataToClipboard = () => {
+            const dataStr = JSON.stringify(tripData);
+            navigator.clipboard.writeText(dataStr).then(() => {
+                alert("✅ 代碼已複製！\n請貼到 Line 或 Email 傳送給手機。");
+            }).catch(err => {
+                console.error('Async: Could not copy text: ', err);
+                alert("❌ 複製失敗，請手動複製");
+                prompt("請手動複製以下代碼：", dataStr);
+            });
+        };
+
+        window.pasteDataFromClipboard = async () => {
+            let text = "";
+            try {
+                text = await navigator.clipboard.readText();
+            } catch (err) {
+                // Fallback
+            }
+            
+            if (!text) {
+                text = prompt("請貼上代碼：");
+            }
+
+            if (text) {
+                processImportData(text);
+            }
+        };
+
+        function processImportData(jsonStr) {
+            try {
+                const data = JSON.parse(jsonStr);
+                if (data && data.days) {
+                    tripData = data;
+                    saveData();
+                    alert("✅ 同步成功！網頁將重新整理。");
+                    location.reload();
+                } else {
+                    alert("❌ 代碼格式錯誤！");
+                }
+            } catch (e) {
+                alert("❌ 無效的代碼！");
+            }
         }
 
         // --- Todo List Functions ---
@@ -628,7 +717,6 @@
         
         window.updateTodoText = (category, index, val) => {
             tripData.todoList[category][index].text = val;
-            // Don't save yet, wait for exit edit mode
         };
 
         window.addTodoToCategory = (category) => {
