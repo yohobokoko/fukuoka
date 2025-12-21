@@ -132,8 +132,8 @@
         <div id="chat-messages">
             <div class="message ai-msg">
                 哈囉！我是您的九州 AI 導遊。<br>
-                首頁的介紹文字現在也可以編輯囉！<br>
-                點擊「✏️ 編輯」試試看吧！🌿
+                所有編輯功能都修復完畢！<br>
+                現在點擊「✏️ 編輯」，所有文字欄位都會變成輸入框，您可以直接修改內容了！🌿
             </div>
         </div>
         <div class="typing-indicator" id="typing-indicator">Gemini 正在查詢...</div>
@@ -272,6 +272,11 @@
             <div class="flex justify-between mt-8 pt-4 border-t border-gray-100" id="timeline-nav-footer">
                 <!-- Nav buttons injected by JS -->
             </div>
+
+            <!-- Add Button (Edit Mode) -->
+            <button id="add-activity-btn" class="hidden w-full py-3 rounded-xl border-2 border-dashed border-gray-300 text-gray-500 hover:border-orange-400 hover:text-orange-500 transition font-bold" onclick="addActivity()">
+                + 新增行程
+            </button>
         </div>
     </template>
 
@@ -508,7 +513,6 @@
 
         const mainContent = document.getElementById('main-content');
         const dayNav = document.getElementById('day-nav');
-        // Note: packingListEl is removed from sidebar
         const sidebarContainer = document.getElementById('sidebar-container');
         const syncModal = document.getElementById('sync-modal');
 
@@ -818,10 +822,7 @@
                 ? dayData.activities 
                 : dayData.activities.filter(a => a.type === activeFilter);
 
-            timelineContainer.innerHTML = filteredActivities.map((act) => {
-                // Find actual index in source array for editing
-                const actIdx = dayData.activities.indexOf(act);
-                
+            timelineContainer.innerHTML = filteredActivities.map((act, actIdx) => {
                 let typeColor = 'bg-gray-100 text-gray-600';
                 let typeBorder = 'border-gray-200';
                 if (act.type === 'food') { typeColor = 'bg-red-50 text-red-600'; typeBorder = 'border-red-200'; }
@@ -905,10 +906,18 @@
             if (!isEditMode) {
                 let footerHtml = '';
                 if (dayIndex > 0) {
-                    footerHtml += `<button onclick="selectDay(${dayIndex - 1})" class="flex items-center gap-2 text-gray-500 hover:text-orange-600 transition group cursor-pointer"><span class="text-lg group-hover:-translate-x-1 transition">←</span><div class="text-left"><div class="text-xs font-bold text-gray-400">上一天</div><div class="text-sm font-bold">Day ${tripData.days[dayIndex - 1].day}</div></div></button>`;
+                    footerHtml += `<button onclick="selectDay(${dayIndex - 1})" 
+                        class="flex items-center gap-2 text-gray-500 hover:text-orange-600 transition group cursor-pointer">
+                        <span class="text-lg group-hover:-translate-x-1 transition">←</span>
+                        <div class="text-left">
+                            <div class="text-xs font-bold text-gray-400">上一天</div>
+                            <div class="text-sm font-bold">Day ${tripData.days[dayIndex - 1].day}</div>
+                        </div>
+                    </button>`;
                 } else { footerHtml += `<div></div>`; }
                 if (dayIndex < tripData.days.length - 1) {
-                    footerHtml += `<button onclick="selectDay(${dayIndex + 1})" class="flex items-center gap-3 bg-orange-100 hover:bg-orange-200 text-orange-800 px-5 py-3 rounded-xl transition group shadow-sm cursor-pointer transform hover:scale-105 active:scale-95"><div class="text-right"><div class="text-xs font-bold text-orange-600 uppercase tracking-wide">前往下一天</div><div class="text-lg font-bold">Day ${tripData.days[dayIndex + 1].day}</div></div><span class="text-xl group-hover:translate-x-1 transition">→</span></button>`;
+                    footerHtml += `<button onclick="selectDay(${dayIndex + 1})" 
+                        class="flex items-center gap-3 bg-orange-100 hover:bg-orange-200 text-orange-800 px-5 py-3 rounded-xl transition group shadow-sm cursor-pointer transform hover:scale-105 active:scale-95"><div class="text-right"><div class="text-xs font-bold text-orange-600 uppercase tracking-wide">前往下一天</div><div class="text-lg font-bold">Day ${tripData.days[dayIndex + 1].day}</div></div><span class="text-xl group-hover:translate-x-1 transition">→</span></button>`;
                 }
                 navFooter.innerHTML = footerHtml;
             } else {
