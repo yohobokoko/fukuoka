@@ -70,7 +70,7 @@
         }
 
         /* Edit Mode Styles */
-        .edit-input { border: 1px solid #cbd5e1; border-radius: 0.375rem; padding: 0.25rem 0.5rem; width: 100%; font-size: 0.875rem; color: #4a4a4a; margin-bottom: 0.25rem; }
+        .edit-input { border: 1px solid #cbd5e1; border-radius: 0.375rem; padding: 0.25rem 0.5rem; width: 100%; font-size: 0.875rem; color: #4a4a4a; margin-bottom: 0.25rem; background: white; }
         .edit-input:focus { outline: none; border-color: #d97706; ring: 2px solid #d97706; }
         .edit-textarea { width: 100%; min-height: 80px; resize: vertical; }
         .delete-btn { position: absolute; top: -10px; right: -10px; background: #ef4444; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 12px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.2); z-index: 20; }
@@ -132,8 +132,8 @@
         <div id="chat-messages">
             <div class="message ai-msg">
                 哈囉！我是您的九州 AI 導遊。<br>
-                版面已經整理過囉！現在「編輯」和「同步」按鈕都在最上方，不會擋住標題。<br>
-                行李檢查表也已經合併到「待辦事項」頁面，側邊欄更清爽了！🌿
+                首頁的介紹文字現在也可以編輯囉！<br>
+                點擊「✏️ 編輯」試試看吧！🌿
             </div>
         </div>
         <div class="typing-indicator" id="typing-indicator">Gemini 正在查詢...</div>
@@ -159,9 +159,11 @@
         </div>
 
         <!-- Cover -->
-        <div class="text-center border-b-2 border-dashed border-gray-300 pb-8 mb-8 relative">
-            <h1 class="text-4xl font-bold text-yellow-900 mb-2 tracking-wide">王家北九州六日行</h1>
-            <p class="text-gray-600 text-lg font-medium">大分 ✕ 別府 ✕ 柳川 ✕ 福岡</p>
+        <div class="text-center border-b-2 border-dashed border-gray-300 pb-8 mb-8 relative pt-10">
+            <div id="main-title-container">
+                <h1 class="text-4xl font-bold text-yellow-900 mb-2 tracking-wide">王家北九州六日行</h1>
+                <p class="text-gray-600 text-lg font-medium">大分 ✕ 別府 ✕ 柳川 ✕ 福岡</p>
+            </div>
         </div>
 
         <nav class="flex gap-2 mb-6 overflow-x-auto pb-2 md:pb-0">
@@ -195,13 +197,8 @@
     <template id="info-template">
         <div class="space-y-6 animate-fade-in fade-enter">
             <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-3xl p-8 border border-orange-200 relative overflow-hidden">
-                <div class="relative z-10">
-                    <h2 class="text-3xl font-bold text-orange-900 mb-4">旅程概覽</h2>
-                    <p class="text-orange-800 opacity-90 leading-relaxed text-lg">
-                        這是一趟為王家量身打造的六日北九州之旅。我們將造訪大分、別府、由布院、柳川與福岡。<br>
-                        行程包含了溫泉、觀光列車、遊船以及當地的特色美食。<br>
-                        請放慢腳步，享受這段美好的旅程。
-                    </p>
+                <div class="relative z-10" id="intro-text-container">
+                    <!-- Title and Desc injected here -->
                 </div>
                 <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-orange-200 rounded-full opacity-50 blur-2xl"></div>
             </div>
@@ -384,6 +381,10 @@
     <script>
         // --- Default Data ---
         const defaultTripData = {
+            mainTitle: "王家北九州六日行",
+            subTitle: "大分 ✕ 別府 ✕ 柳川 ✕ 福岡",
+            introTitle: "旅程概覽",
+            introDesc: "這是一趟為王家量身打造的六日北九州之旅。我們將造訪大分、別府、由布院、柳川與福岡。<br>行程包含了溫泉、觀光列車、遊船以及當地的特色美食。<br>請放慢腳步，享受這段美好的旅程。",
             days: [
                 {
                     day: 1,
@@ -473,7 +474,7 @@
                     ]
                 }
             ],
-            // Packing list merged into Todo List for initial load
+            // Todo List (Including merged packing list)
             todoList: {
                 "🎒 行李清單": [
                     {text: "護照 (效期需6個月以上)", done: false},
@@ -513,7 +514,13 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             renderDayNav();
-            // Data Migration: If old data structure, merge packing list to todo list
+            // Ensure title/desc fields exist for old data
+            if(!tripData.mainTitle) {
+                tripData.mainTitle = defaultTripData.mainTitle;
+                tripData.subTitle = defaultTripData.subTitle;
+                tripData.introTitle = defaultTripData.introTitle;
+                tripData.introDesc = defaultTripData.introDesc;
+            }
             if (!tripData.todoList) {
                  tripData.todoList = defaultTripData.todoList;
                  saveData();
@@ -601,13 +608,33 @@
                 btn.innerText = '✏️ 編輯';
                 saveData();
             }
+            
+            // Re-render Header Title (Global Update)
+            renderHeaderTitle();
+
             // Refresh current view
-            if (currentView === 'itinerary') renderItinerary(currentDayIndex);
+            if (currentView === 'info') renderInfo();
+            else if (currentView === 'itinerary') renderItinerary(currentDayIndex);
             else if (currentView === 'todo') renderTodo();
         };
 
         function saveData() {
             localStorage.setItem('kyushu_trip_data', JSON.stringify(tripData));
+        }
+        
+        function renderHeaderTitle() {
+             const titleContainer = document.getElementById('main-title-container');
+             if(isEditMode) {
+                 titleContainer.innerHTML = `
+                    <input type="text" value="${tripData.mainTitle}" class="edit-input text-4xl font-bold text-yellow-900 text-center mb-2" onchange="updateGlobal('mainTitle', this.value)">
+                    <input type="text" value="${tripData.subTitle}" class="edit-input text-lg text-gray-600 text-center" onchange="updateGlobal('subTitle', this.value)">
+                 `;
+             } else {
+                 titleContainer.innerHTML = `
+                    <h1 class="text-4xl font-bold text-yellow-900 mb-2 tracking-wide">${tripData.mainTitle}</h1>
+                    <p class="text-gray-600 text-lg font-medium">${tripData.subTitle}</p>
+                 `;
+             }
         }
 
         // --- Data Transfer Logic ---
@@ -706,6 +733,9 @@
 
             mainContent.innerHTML = '';
             mainContent.appendChild(template);
+            
+            // Render Header Title initially
+            renderHeaderTitle();
         }
 
         window.toggleTodo = (category, index) => {
@@ -742,14 +772,29 @@
 
         function renderInfo() {
             const template = document.getElementById('info-template').content.cloneNode(true);
+            
+            if(isEditMode) {
+                 template.getElementById('intro-text-container').innerHTML = `
+                    <input type="text" value="${tripData.introTitle}" class="edit-input text-3xl font-bold text-orange-900 mb-4" onchange="updateGlobal('introTitle', this.value)">
+                    <textarea class="edit-input edit-textarea text-lg" onchange="updateGlobal('introDesc', this.value)">${tripData.introDesc}</textarea>
+                 `;
+            } else {
+                 template.getElementById('intro-text-container').innerHTML = `
+                    <h2 class="text-3xl font-bold text-orange-900 mb-4">${tripData.introTitle}</h2>
+                    <p class="text-orange-800 opacity-90 leading-relaxed text-lg">${tripData.introDesc}</p>
+                 `;
+            }
+
             mainContent.innerHTML = '';
             mainContent.appendChild(template);
+            renderHeaderTitle();
         }
 
         function renderSouvenir() {
             const template = document.getElementById('souvenir-template').content.cloneNode(true);
             mainContent.innerHTML = '';
             mainContent.appendChild(template);
+            renderHeaderTitle();
         }
 
         function renderItinerary(dayIndex) {
@@ -773,7 +818,10 @@
                 ? dayData.activities 
                 : dayData.activities.filter(a => a.type === activeFilter);
 
-            timelineContainer.innerHTML = filteredActivities.map((act, actIdx) => {
+            timelineContainer.innerHTML = filteredActivities.map((act) => {
+                // Find actual index in source array for editing
+                const actIdx = dayData.activities.indexOf(act);
+                
                 let typeColor = 'bg-gray-100 text-gray-600';
                 let typeBorder = 'border-gray-200';
                 if (act.type === 'food') { typeColor = 'bg-red-50 text-red-600'; typeBorder = 'border-red-200'; }
@@ -793,6 +841,11 @@
                                     <option value="📸" ${act.icon==='📸'?'selected':''}>📸</option>
                                     <option value="🍵" ${act.icon==='🍵'?'selected':''}>🍵</option>
                                     <option value="🛍️" ${act.icon==='🛍️'?'selected':''}>🛍️</option>
+                                    <option value="🍽️" ${act.icon==='🍽️'?'selected':''}>🍽️</option>
+                                    <option value="🥩" ${act.icon==='🥩'?'selected':''}>🥩</option>
+                                    <option value="🚂" ${act.icon==='🚂'?'selected':''}>🚂</option>
+                                    <option value="👹" ${act.icon==='👹'?'selected':''}>👹</option>
+                                    <option value="🛶" ${act.icon==='🛶'?'selected':''}>🛶</option>
                                 </select>
                             </div>
                             <input type="text" value="${act.title}" class="edit-input font-bold" onchange="updateActivity(${dayIndex}, ${actIdx}, 'title', this.value)">
@@ -864,9 +917,14 @@
 
             mainContent.innerHTML = '';
             mainContent.appendChild(template);
+            renderHeaderTitle();
         }
 
         // --- Data Update Functions ---
+        window.updateGlobal = (field, value) => {
+            tripData[field] = value;
+        };
+
         window.updateDay = (dayIndex, field, value) => {
             tripData.days[dayIndex][field] = value;
         };
