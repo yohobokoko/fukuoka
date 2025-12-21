@@ -66,7 +66,7 @@
         @media print {
             body { background-color: white; background-image: none; }
             .no-print { display: none !important; }
-            #chat-widget, #ai-toggle-btn, #sync-modal { display: none !important; }
+            #chat-widget, #ai-toggle-btn { display: none !important; }
         }
 
         /* Edit Mode Styles */
@@ -76,10 +76,6 @@
         .delete-btn { position: absolute; top: -10px; right: -10px; background: #ef4444; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 12px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.2); z-index: 20; }
         .todo-input { border: 1px solid #e5e7eb; border-radius: 0.5rem; padding: 0.3rem 0.6rem; width: 100%; transition: all 0.2s; font-size: 0.9rem; }
         .todo-input:focus { outline: none; border-color: #d97706; ring: 2px solid #fdba74; }
-
-        /* Sync Modal */
-        #sync-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 100; justify-content: center; align-items: center; backdrop-filter: blur(2px); }
-        .modal-content { background: white; width: 90%; max-width: 500px; padding: 2rem; border-radius: 1.5rem; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); position: relative; }
     </style>
     <script>
         function imgError(image) {
@@ -91,33 +87,12 @@
 </head>
 <body>
 
-    <!-- Sync Modal -->
-    <div id="sync-modal">
-        <div class="modal-content animate-fade-in">
-            <button onclick="closeSyncModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
-            <h3 class="text-2xl font-bold text-gray-800 mb-2">☁️ 同步/備份行程</h3>
-            <p class="text-sm text-gray-500 mb-6">因為沒有伺服器，請手動複製代碼來同步裝置。</p>
-            
-            <div class="space-y-6">
-                <!-- Export Section -->
-                <div class="bg-orange-50 p-4 rounded-xl border border-orange-100">
-                    <h4 class="font-bold text-orange-800 mb-2 flex items-center gap-2">📤 步驟 1：產生代碼 (在電腦上做)</h4>
-                    <p class="text-xs text-orange-600 mb-3">修改完行程後，點擊按鈕複製代碼，並<b>傳送到手機</b>(如LINE)。</p>
-                    <button onclick="copyDataToClipboard()" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg transition flex justify-center items-center gap-2">
-                        📋 複製完整資料代碼
-                    </button>
-                </div>
-
-                <!-- Import Section -->
-                <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
-                    <h4 class="font-bold text-blue-800 mb-2 flex items-center gap-2">📥 步驟 2：讀取代碼 (在手機上做)</h4>
-                    <p class="text-xs text-blue-600 mb-3">複製收到的代碼，點擊按鈕貼上，即可同步。</p>
-                    <button onclick="pasteDataFromClipboard()" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition flex justify-center items-center gap-2">
-                        📋 貼上代碼並同步
-                    </button>
-                </div>
-            </div>
-        </div>
+    <!-- Header Actions (Simplified) -->
+    <div class="fixed top-4 right-4 no-print z-50 flex flex-wrap gap-2 justify-end">
+        <!-- Edit Toggle -->
+        <button id="edit-toggle-btn" onclick="toggleEditMode()" class="bg-blue-600 text-white px-3 py-2 rounded-lg shadow-sm hover:bg-blue-700 flex items-center gap-1 font-bold transition text-xs md:text-sm">
+            ✏️ 編輯
+        </button>
     </div>
 
     <!-- AI Toggle Button -->
@@ -132,8 +107,9 @@
         <div id="chat-messages">
             <div class="message ai-msg">
                 哈囉！我是您的九州 AI 導遊。<br>
-                所有編輯功能都修復完畢！<br>
-                現在點擊「✏️ 編輯」，所有文字欄位都會變成輸入框，您可以直接修改內容了！🌿
+                日期已經更新囉！(1/22 - 1/27)<br>
+                午餐和晚餐的備註也都加上了。<br>
+                祝你們玩得開心！🌿
             </div>
         </div>
         <div class="typing-indicator" id="typing-indicator">Gemini 正在查詢...</div>
@@ -144,25 +120,12 @@
     </div>
 
     <div class="page-container" id="brochure-content">
-        
-        <!-- Toolbar Actions (Moved inside container flow) -->
-        <div class="flex flex-wrap gap-2 justify-end mb-4 no-print">
-            <!-- Edit Toggle -->
-            <button id="edit-toggle-btn" onclick="toggleEditMode()" class="bg-blue-600 text-white px-3 py-2 rounded-lg shadow-sm hover:bg-blue-700 flex items-center gap-1 font-bold transition text-xs md:text-sm">
-                ✏️ 編輯
-            </button>
-            
-            <!-- Sync Button -->
-            <button onclick="openSyncModal()" class="bg-green-600 text-white px-3 py-2 rounded-lg shadow-sm hover:bg-green-700 flex items-center gap-1 font-bold transition text-xs md:text-sm">
-                ☁️ 同步
-            </button>
-        </div>
-
         <!-- Cover -->
         <div class="text-center border-b-2 border-dashed border-gray-300 pb-8 mb-8 relative pt-10">
             <div id="main-title-container">
                 <h1 class="text-4xl font-bold text-yellow-900 mb-2 tracking-wide">王家北九州六日行</h1>
                 <p class="text-gray-600 text-lg font-medium">大分 ✕ 別府 ✕ 柳川 ✕ 福岡</p>
+                <p class="text-orange-500 text-md font-bold mt-2">2025.1.22 (三) - 1.27 (一)</p>
             </div>
         </div>
 
@@ -208,12 +171,12 @@
                 <div class="bg-white p-5 rounded-2xl border-2 border-dashed border-yellow-200 shadow-sm">
                     <h3 class="font-bold text-yellow-800 mb-3 flex items-center text-lg">🏨 住宿小屋</h3>
                     <div class="mb-4 pl-2 border-l-4 border-pink-300">
-                        <span class="text-xs font-bold text-pink-600">Day 1-2</span>
+                        <span class="text-xs font-bold text-pink-600">1/22-23 (Day 1-2)</span>
                         <p class="font-bold mt-1 text-gray-800">JR Kyushu Hotel Blossom Oita</p>
                         <p class="text-sm text-gray-500">JR大分站直結。頂樓露天溫泉超讚！</p>
                     </div>
                     <div class="pl-2 border-l-4 border-blue-300">
-                        <span class="text-xs font-bold text-blue-600">Day 3-5</span>
+                        <span class="text-xs font-bold text-blue-600">1/24-26 (Day 3-5)</span>
                         <p class="font-bold mt-1 text-gray-800">三井花園飯店福岡祇園</p>
                         <p class="text-sm text-gray-500">博多站步行7分，博多運河城旁。</p>
                     </div>
@@ -222,18 +185,18 @@
                     <h3 class="font-bold text-yellow-800 mb-3 flex items-center text-lg">🛫 交通與票券</h3>
                     <ul class="text-sm space-y-3 text-gray-600">
                         <li class="flex justify-between items-center border-b border-gray-100 pb-2">
-                            <span>抵達福岡：</span>
+                            <span>1/22 (三) 抵達福岡：</span>
                             <span class="font-bold text-gray-900 bg-gray-100 px-2 py-1 rounded">11:15</span>
                         </li>
                         <li class="flex justify-between items-center border-b border-gray-100 pb-2">
-                            <span>離開福岡：</span>
+                            <span>1/27 (一) 離開福岡：</span>
                             <span class="font-bold text-gray-900 bg-gray-100 px-2 py-1 rounded">15:55</span>
                         </li>
                         <li class="pt-1">
                             <p class="font-bold text-gray-800 mb-1">🎫 重點票券</p>
                             <ul class="list-disc pl-5 space-y-1 text-xs">
-                                <li><b>Day 3 由布院之森</b> (需提前劃位)</li>
-                                <li><b>Day 4 太宰府柳川套票</b> (西鐵天神站買)</li>
+                                <li><b>1/24 由布院之森</b> (需提前劃位)</li>
+                                <li><b>1/25 太宰府柳川套票</b> (西鐵天神站買)</li>
                                 <li>其餘交通使用 JR 車票或 IC 卡</li>
                             </ul>
                         </li>
@@ -384,7 +347,7 @@
     </template>
 
     <script>
-        // --- Default Data ---
+        // --- Default Data with Dates ---
         const defaultTripData = {
             mainTitle: "王家北九州六日行",
             subTitle: "大分 ✕ 別府 ✕ 柳川 ✕ 福岡",
@@ -393,12 +356,13 @@
             days: [
                 {
                     day: 1,
-                    title: "抵達九州 & 機場拉麵午餐",
-                    focus: "九州之旅啟程！🍜 機場拉麵名店巡禮 ➔ 🚄 搭乘藍色音速號奔馳 ➔ 🥩 大分市區享用豐後牛晚餐",
+                    date: "1/22 (三)",
+                    title: "抵達九州 & 機場吃小物",
+                    focus: "九州之旅啟程！🍜 機場吃小物 ➔ 🚄 搭乘藍色音速號奔馳 ➔ 🥩 大分市區享用豐後牛晚餐",
                     tags: ["移動日", "美食", "拉麵"],
                     activities: [
                         { time: "11:15", title: "抵達福岡機場", type: "transport", desc: "出關約 40-60 分鐘，搭接駁車至「國內線航廈」3F。", icon: "🛬" },
-                        { time: "12:15", title: "午餐：拉麵滑走路", type: "food", desc: "就在機場內，匯集九州名店，順路先吃再說！", icon: "🍜", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Hakata_ramen_by_gusa_in_Kyoto.jpg/640px-Hakata_ramen_by_gusa_in_Kyoto.jpg" },
+                        { time: "12:15", title: "午餐：先在機場吃點小物", type: "food", desc: "也可去博多車站吃，但行李比較麻煩一點。", icon: "🍜", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Hakata_ramen_by_gusa_in_Kyoto.jpg/640px-Hakata_ramen_by_gusa_in_Kyoto.jpg" },
                         { time: "14:00", title: "博多站：購買車票", type: "transport", desc: "前往綠色窗口購買往大分的特急券 (Sonic 號)。", icon: "🚉" },
                         { time: "15:00", title: "移動：前往大分", type: "transport", desc: "搭乘 JR 音速號 (Sonic) 約 2 小時 15 分。小撇步：在小倉站記得將座椅旋轉 180 度。", icon: "🚄", image: "https://upload.wikimedia.org/wikipedia/commons/f/f6/JR_Kyushu_883_series_renewed_Sonic.jpg" },
                         { time: "17:15", title: "飯店 Check-in", type: "stay", desc: "JR Kyushu Hotel Blossom Oita (車站直結)，先休息一下。", icon: "🏨" },
@@ -407,6 +371,7 @@
                 },
                 {
                     day: 2,
+                    date: "1/23 (四)",
                     title: "慢遊童話小鎮：由布院",
                     focus: "金鱗湖晨霧/美景、湯之坪街道甜點、釜飯",
                     tags: ["自然", "散策", "甜點"],
@@ -424,6 +389,7 @@
                 },
                 {
                     day: 3,
+                    date: "1/24 (五)",
                     title: "別府地獄 ➔ 藥院燒肉",
                     focus: "別府地獄精華、地獄蒸料理、由布院之森回程、燒肉大餐",
                     tags: ["地獄溫泉", "觀光列車", "燒肉"],
@@ -433,11 +399,12 @@
                         { time: "12:00", title: "午餐：地獄蒸", type: "food", desc: "地獄蒸工房 鐵輪，體驗用溫泉蒸氣蒸海鮮、蔬菜。", icon: "🥚" },
                         { time: "14:40", title: "移動：由布院之森", type: "transport", desc: "搭乘夢幻觀光列車「由布院之森 4號」返回博多 (約17:35抵達)。*務必提前劃位！*", icon: "🚂", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/JRK_Kiha72_Yufuin-no-mori_Kyudai_Line.jpg/640px-JRK_Kiha72_Yufuin-no-mori_Kyudai_Line.jpg" },
                         { time: "18:00", title: "飯店 Check-in", type: "stay", desc: "三井花園飯店福岡祇園，休息整理。", icon: "🏨" },
-                        { time: "19:00", title: "晚餐：藥院燒肉", type: "food", desc: "前往燒肉激戰區「藥院」。推薦：Nikuichi (にくいち) 或 Bakuro (記得提前預約！)", icon: "🥩" }
+                        { time: "19:00", title: "晚餐：藥院燒肉 (已訂位)", type: "food", desc: "前往燒肉激戰區「藥院」。推薦：Nikuichi (にくいち) 或 Bakuro。", icon: "🥩" }
                     ]
                 },
                 {
                     day: 4,
+                    date: "1/25 (六)",
                     title: "柳川遊船 & 太宰府雙城遊",
                     focus: "柳川遊船、一蘭拉麵、太宰府天滿宮、天神散策、瓢簞壽司",
                     tags: ["水鄉", "拉麵", "散策"],
@@ -453,6 +420,7 @@
                 },
                 {
                     day: 5,
+                    date: "1/26 (日)",
                     title: "福岡美景：大濠公園 & 水炊鍋",
                     focus: "櫛田神社、大濠公園下午茶、福岡塔夕陽、水炊鍋",
                     tags: ["美景", "下午茶", "鍋物"],
@@ -462,11 +430,12 @@
                         { time: "13:30", title: "大濠公園 & 美術館", type: "sightseeing", desc: "搭地鐵至「大濠公園站」。湖邊散步，參觀福岡市美術館 (草間彌生南瓜)。", icon: "🦢", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Ohori_Park_04.JPG/640px-Ohori_Park_04.JPG" },
                         { time: "15:00", title: "湖畔下午茶", type: "food", desc: "推薦：&LOCALS (日式最中餅/茶飲)，坐在玻璃屋內欣賞湖景。", icon: "☕" },
                         { time: "17:00", title: "福岡塔 & 百道濱", type: "sightseeing", desc: "搭巴士前往，登上福岡塔看夕陽與夜景，或在海邊教堂拍照。", icon: "🗼", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Fukuoka_Tower_October_2011_01.jpg/800px-Fukuoka_Tower_October_2011_01.jpg" },
-                        { time: "19:30", title: "晚餐：水炊鍋", type: "food", desc: "水炊き 橙 (Daidai)，米其林必比登推薦，湯頭超濃郁！(需預約)", icon: "🥘" }
+                        { time: "19:30", title: "晚餐：水炊鍋 (已訂位)", type: "food", desc: "水炊き 橙 (Daidai)，米其林必比登推薦，湯頭超濃郁！(已付訂金：16600日圓)", icon: "🥘" }
                     ]
                 },
                 {
                     day: 6,
+                    date: "1/27 (一)",
                     title: "最後衝刺 & 快樂返家",
                     focus: "悠閒退房、機場免稅店掃貨",
                     tags: ["購物", "返程"],
@@ -479,7 +448,7 @@
                     ]
                 }
             ],
-            // Todo List (Including merged packing list)
+            // Packing list merged into Todo List for initial load
             todoList: {
                 "🎒 行李清單": [
                     {text: "護照 (效期需6個月以上)", done: false},
@@ -497,15 +466,24 @@
                     {text: "預約 Wifi 機 / 網卡", done: false}
                 ],
                 "預約事項": [
-                    {text: "Day 3 藥院燒肉 (Nikuichi/Bakuro)", done: false},
-                    {text: "Day 5 水炊鍋 (橙)", done: false},
-                    {text: "Day 3 由布院之森車票 (提早一個月搶)", done: false}
+                    {text: "12/24 由布院之森訂票", done: false},
+                    {text: "找大分餐廳", done: false}
                 ]
             }
         };
 
         // --- Logic ---
-        let tripData = JSON.parse(localStorage.getItem('kyushu_trip_data')) || defaultTripData;
+        // Force update to v2 to ensure new data (dates, lunch update) is loaded
+        // Logic: if local storage doesn't have 'version' or version < 2, use default
+        let storedData = JSON.parse(localStorage.getItem('kyushu_trip_data'));
+        // Check if stored data matches the new requirement (simple check: does Day 1 have a date field?)
+        let tripData = (storedData && storedData.days && storedData.days[0].date) ? storedData : defaultTripData;
+
+        // Force save the new default data if we fell back to it
+        if(tripData === defaultTripData) {
+            localStorage.setItem('kyushu_trip_data', JSON.stringify(tripData));
+        }
+
         let currentView = 'info';
         let currentDayIndex = 0;
         let activeFilter = 'all';
@@ -513,32 +491,13 @@
 
         const mainContent = document.getElementById('main-content');
         const dayNav = document.getElementById('day-nav');
+        // Note: packingListEl is removed from sidebar
         const sidebarContainer = document.getElementById('sidebar-container');
-        const syncModal = document.getElementById('sync-modal');
 
         document.addEventListener('DOMContentLoaded', () => {
             renderDayNav();
-            // Ensure title/desc fields exist for old data
-            if(!tripData.mainTitle) {
-                tripData.mainTitle = defaultTripData.mainTitle;
-                tripData.subTitle = defaultTripData.subTitle;
-                tripData.introTitle = defaultTripData.introTitle;
-                tripData.introDesc = defaultTripData.introDesc;
-            }
-            if (!tripData.todoList) {
-                 tripData.todoList = defaultTripData.todoList;
-                 saveData();
-            }
             switchView('info');
         });
-
-        // --- Sync Modal Functions ---
-        function openSyncModal() {
-            syncModal.style.display = 'flex';
-        }
-        function closeSyncModal() {
-            syncModal.style.display = 'none';
-        }
 
         // --- View Switching ---
         window.switchView = (view) => {
@@ -580,7 +539,7 @@
                 <button onclick="selectDay(${index})" 
                     class="day-btn flex-shrink-0 w-full text-left px-3 py-2 rounded-lg border border-orange-100 hover:bg-orange-50 transition flex flex-col justify-center items-center text-center group ${index === 0 ? 'bg-orange-50 border-orange-200 ring-1 ring-orange-200' : 'bg-white'}"
                     id="day-btn-${index}">
-                    <span class="text-xs font-bold text-orange-500 uppercase">Day ${d.day}</span>
+                    <span class="text-xs font-bold text-orange-500 uppercase">Day ${d.day} <span class="text-gray-400 ml-1 font-normal">${d.date}</span></span>
                     <h4 class="font-bold text-gray-700 text-xs truncate w-full group-hover:text-orange-700">${d.title.split('&')[0]}</h4>
                 </button>
             `).join('');
@@ -637,53 +596,9 @@
                  titleContainer.innerHTML = `
                     <h1 class="text-4xl font-bold text-yellow-900 mb-2 tracking-wide">${tripData.mainTitle}</h1>
                     <p class="text-gray-600 text-lg font-medium">${tripData.subTitle}</p>
+                    <p class="text-orange-500 text-md font-bold mt-2">2025.1.22 (三) - 1.27 (一)</p>
                  `;
              }
-        }
-
-        // --- Data Transfer Logic ---
-        window.copyDataToClipboard = () => {
-            const dataStr = JSON.stringify(tripData);
-            navigator.clipboard.writeText(dataStr).then(() => {
-                alert("✅ 代碼已複製！\n請貼到 Line 或 Email 傳送給手機。");
-            }).catch(err => {
-                console.error('Async: Could not copy text: ', err);
-                alert("❌ 複製失敗，請手動複製");
-                prompt("請手動複製以下代碼：", dataStr);
-            });
-        };
-
-        window.pasteDataFromClipboard = async () => {
-            let text = "";
-            try {
-                text = await navigator.clipboard.readText();
-            } catch (err) {
-                // Fallback
-            }
-            
-            if (!text) {
-                text = prompt("請貼上代碼：");
-            }
-
-            if (text) {
-                processImportData(text);
-            }
-        };
-
-        function processImportData(jsonStr) {
-            try {
-                const data = JSON.parse(jsonStr);
-                if (data && data.days) {
-                    tripData = data;
-                    saveData();
-                    alert("✅ 同步成功！網頁將重新整理。");
-                    location.reload();
-                } else {
-                    alert("❌ 代碼格式錯誤！");
-                }
-            } catch (e) {
-                alert("❌ 無效的代碼！");
-            }
         }
 
         // --- Todo List Functions ---
