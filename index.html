@@ -107,9 +107,10 @@
         <div id="chat-messages">
             <div class="message ai-msg">
                 哈囉！我是您的九州 AI 導遊。<br>
-                日期已經更新囉！(1/22 - 1/27)<br>
-                午餐和晚餐的備註也都加上了。<br>
-                祝你們玩得開心！🌿
+                由布院之森的訂票資訊更新囉！<br>
+                1/24 (五) 14:43 從別府出發，18:10 抵達博多。<br>
+                2號車 5AB、6AB，便當也訂好了，真棒！🍱<br>
+                祝旅途愉快！🌿
             </div>
         </div>
         <div class="typing-indicator" id="typing-indicator">Gemini 正在查詢...</div>
@@ -185,11 +186,11 @@
                     <h3 class="font-bold text-yellow-800 mb-3 flex items-center text-lg">🛫 交通與票券</h3>
                     <ul class="text-sm space-y-3 text-gray-600">
                         <li class="flex justify-between items-center border-b border-gray-100 pb-2">
-                            <span>1/22 (三) 抵達福岡：</span>
+                            <span>抵達福岡：</span>
                             <span class="font-bold text-gray-900 bg-gray-100 px-2 py-1 rounded">11:15</span>
                         </li>
                         <li class="flex justify-between items-center border-b border-gray-100 pb-2">
-                            <span>1/27 (一) 離開福岡：</span>
+                            <span>離開福岡：</span>
                             <span class="font-bold text-gray-900 bg-gray-100 px-2 py-1 rounded">15:55</span>
                         </li>
                         <li class="pt-1">
@@ -362,27 +363,28 @@
                     tags: ["移動日", "美食", "拉麵"],
                     activities: [
                         { time: "11:15", title: "抵達福岡機場", type: "transport", desc: "出關約 40-60 分鐘，搭接駁車至「國內線航廈」3F。", icon: "🛬" },
-                        { time: "12:15", title: "午餐：先在機場吃點小物", type: "food", desc: "也可去博多車站吃，但行李比較麻煩一點。", icon: "🍜", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Hakata_ramen_by_gusa_in_Kyoto.jpg/640px-Hakata_ramen_by_gusa_in_Kyoto.jpg" },
-                        { time: "14:00", title: "博多站：購買車票", type: "transport", desc: "前往綠色窗口購買往大分的特急券 (Sonic 號)。", icon: "🚉" },
-                        { time: "15:00", title: "移動：前往大分", type: "transport", desc: "搭乘 JR 音速號 (Sonic) 約 2 小時 15 分。小撇步：在小倉站記得將座椅旋轉 180 度。", icon: "🚄", image: "https://upload.wikimedia.org/wikipedia/commons/f/f6/JR_Kyushu_883_series_renewed_Sonic.jpg" },
-                        { time: "17:15", title: "飯店 Check-in", type: "stay", desc: "JR Kyushu Hotel Blossom Oita (車站直結)，先休息一下。", icon: "🏨" },
-                        { time: "19:00", title: "市區晚餐", type: "food", desc: "前往大分市區（中央町商店街），推薦享用豐後牛或在地居酒屋。", icon: "🍽️" }
+                        { time: "12:00", title: "午餐：先在機場吃點小物", type: "food", desc: "拉麵滑走路在國內線航廈3F。也可去博多車站吃，但行李移動比較麻煩一點。", icon: "🍜", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Hakata_ramen_by_gusa_in_Kyoto.jpg/640px-Hakata_ramen_by_gusa_in_Kyoto.jpg" },
+                        { time: "13:00", title: "前往博多站", type: "transport", desc: "搭乘地鐵至博多站 (約5分鐘)。", icon: "🚇" },
+                        { time: "13:15", title: "博多站：購買車票", type: "transport", desc: "前往綠色窗口購買往大分的特急券 (Sonic 號)。", icon: "🚉" },
+                        { time: "13:36", title: "移動：前往大分", type: "transport", desc: "預計搭乘 **Sonic 25** (13:36發 - 15:43抵)。\n若出關順利趕得上，可買 **Sonic 23** (13:06發 - 15:16抵)。\n*小撇步：在小倉站記得將座椅旋轉 180 度。*", icon: "🚄", image: "https://upload.wikimedia.org/wikipedia/commons/f/f6/JR_Kyushu_883_series_renewed_Sonic.jpg" },
+                        { time: "16:00", title: "飯店 Check-in", type: "stay", desc: "JR Kyushu Hotel Blossom Oita (車站直結)，先休息一下。", icon: "🏨" },
+                        { time: "18:30", title: "市區晚餐", type: "food", desc: "前往大分市區（中央町商店街），推薦享用豐後牛或在地居酒屋。", icon: "🍽️" }
                     ]
                 },
                 {
                     day: 2,
                     date: "1/23 (四)",
                     title: "慢遊童話小鎮：由布院",
-                    focus: "金鱗湖晨霧/美景、湯之坪街道甜點、釜飯",
-                    tags: ["自然", "散策", "甜點"],
+                    focus: "COMICO 美術館、金鱗湖、湯之坪街道、釜飯",
+                    tags: ["自然", "藝術", "美食"],
                     activities: [
                         { time: "08:30", title: "飯店早餐", type: "food", desc: "務必享用！這家早餐評價極高。", icon: "🥐" },
                         { time: "09:30", title: "前往由布院", type: "transport", desc: "搭乘 JR 久大本線 (約 50分 - 1小時)。", icon: "🚂", image: "https://upload.wikimedia.org/wikipedia/commons/9/91/Yufuin_Station_2012.JPG" },
-                        { time: "10:30", title: "湯之坪街道散策", type: "sightseeing", desc: "必吃：B-Speak 蛋糕捲、金賞可樂餅、史努比茶屋。", icon: "🍰" },
-                        { time: "12:00", title: "午餐：釜飯", type: "food", desc: "推薦：由布瑪布希 心 (Yufu Mabushi Shin)，豐後牛釜飯三吃。", icon: "🍲" },
-                        { time: "13:30", title: "童話村 / 昭和館", type: "sightseeing", desc: "Yufuin Floral Village (像吉卜力/哈利波特場景)。", icon: "🌸" },
-                        { time: "15:00", title: "金鱗湖", type: "sightseeing", desc: "下午光線柔和，沿著湖畔步道散步非常愜意。", icon: "📸", image: "https://upload.wikimedia.org/wikipedia/commons/c/c3/Kinrin_Lake_in_morning.jpg" },
-                        { time: "16:00", title: "湖畔下午茶", type: "food", desc: "推薦：Cafe La Ruche 或 Chagal 美術館咖啡廳。", icon: "☕" },
+                        { time: "10:30", title: "抵達 & 散策", type: "sightseeing", desc: "抵達由布院。逛逛車站周邊土產店與由布見通，享受悠閒氣氛。", icon: "🚶" },
+                        { time: "12:30", title: "午餐：由布まぶし 心 (已預約)", type: "food", desc: "湯布院駅前支店。豐後牛釜飯三吃！<br><a href='https://maps.app.goo.gl/JgkMjfRPL3N5yoFU8?g_st=ic' target='_blank' class='text-orange-500 underline hover:text-orange-600'>📍 查看地圖</a>", icon: "🍲" },
+                        { time: "14:00", title: "COMICO ART MUSEUM", type: "sightseeing", desc: "參觀隈研吾設計的現代美術館，欣賞草間彌生與奈良美智作品。(需預約)", icon: "🎨" },
+                        { time: "15:00", title: "湯之坪街道 & 童話村", type: "sightseeing", desc: "美術館結束後，繼續逛 Yufuin Floral Village、史努比茶屋。", icon: "🌸" },
+                        { time: "16:00", title: "金鱗湖 & 下午茶", type: "sightseeing", desc: "欣賞金鱗湖美景，並在湖畔 Cafe La Ruche 喝杯咖啡休息。", icon: "☕", image: "https://upload.wikimedia.org/wikipedia/commons/c/c3/Kinrin_Lake_in_morning.jpg" },
                         { time: "17:30", title: "返回大分", type: "transport", desc: "搭乘 JR 返回大分站。", icon: "🚄" },
                         { time: "19:00", title: "晚餐：大分市區", type: "food", desc: "在大分中央通商店街找間居酒屋體驗在地氣氛。", icon: "🍢" }
                     ]
@@ -390,46 +392,47 @@
                 {
                     day: 3,
                     date: "1/24 (五)",
-                    title: "別府地獄 ➔ 藥院燒肉",
+                    title: "別府地獄 由布院之森",
                     focus: "別府地獄精華、地獄蒸料理、由布院之森回程、燒肉大餐",
                     tags: ["地獄溫泉", "觀光列車", "燒肉"],
                     activities: [
                         { time: "09:00", title: "退房 Check-out", type: "transport", desc: "帶著行李搭乘 JR 至別府站 (15分鐘)，行李寄放車站。", icon: "👋" },
                         { time: "10:00", title: "地獄溫泉巡禮", type: "sightseeing", desc: "搭巴士至「海地獄前」，參觀 海地獄 (最美)、灶地獄 (互動多)。", icon: "👹", image: "https://upload.wikimedia.org/wikipedia/commons/e/ee/Beppu_umijigoku.jpg" },
                         { time: "12:00", title: "午餐：地獄蒸", type: "food", desc: "地獄蒸工房 鐵輪，體驗用溫泉蒸氣蒸海鮮、蔬菜。", icon: "🥚" },
-                        { time: "14:40", title: "移動：由布院之森", type: "transport", desc: "搭乘夢幻觀光列車「由布院之森 4號」返回博多 (約17:35抵達)。*務必提前劃位！*", icon: "🚂", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/JRK_Kiha72_Yufuin-no-mori_Kyudai_Line.jpg/640px-JRK_Kiha72_Yufuin-no-mori_Kyudai_Line.jpg" },
-                        { time: "18:00", title: "飯店 Check-in", type: "stay", desc: "三井花園飯店福岡祇園，休息整理。", icon: "🏨" },
+                        { time: "14:43", title: "移動：由布院之森 4號 (已訂票)", type: "transport", desc: "別府發(14:43) → 博多抵(18:10)。<br>座位：2號車 5號AB、6號AB (指定席)。<br>🍱 已預訂便當，車上享用！", icon: "🚂", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/JRK_Kiha72_Yufuin-no-mori_Kyudai_Line.jpg/640px-JRK_Kiha72_Yufuin-no-mori_Kyudai_Line.jpg" },
+                        { time: "18:30", title: "飯店 Check-in", type: "stay", desc: "三井花園飯店福岡祇園，從博多站博多口步行約 7 分鐘。", icon: "🏨" },
                         { time: "19:00", title: "晚餐：藥院燒肉 (已訂位)", type: "food", desc: "前往燒肉激戰區「藥院」。推薦：Nikuichi (にくいち) 或 Bakuro。", icon: "🥩" }
                     ]
                 },
                 {
                     day: 4,
                     date: "1/25 (六)",
-                    title: "柳川遊船 & 太宰府雙城遊",
-                    focus: "柳川遊船、一蘭拉麵、太宰府天滿宮、天神散策、瓢簞壽司",
-                    tags: ["水鄉", "拉麵", "散策"],
+                    title: "柳川遊船與太宰府",
+                    focus: "柳川遊船、元祖本吉屋鰻魚飯、太宰府天滿宮、Big Camera採購、ShinShin拉麵",
+                    tags: ["水鄉", "鰻魚飯", "散策"],
                     activities: [
                         { time: "09:00", title: "前往天神購票", type: "transport", desc: "搭地鐵至天神站，購買「太宰府柳川觀光套票」後搭乘西鐵電車。", icon: "🚇" },
                         { time: "10:30", title: "柳川遊船 (川下り)", type: "sightseeing", desc: "體驗充滿詩意的運河小舟，聽船夫哼唱小調。", icon: "🛶", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Yanagawa_kawatudari.JPG/640px-Yanagawa_kawatudari.JPG" },
-                        { time: "12:30", title: "移動：前往太宰府", type: "transport", desc: "柳川 → 太宰府 (電車約 50 分鐘)。", icon: "🚌" },
-                        { time: "13:30", title: "午餐：一蘭拉麵", type: "food", desc: "太宰府參道店，特色是五角形合格碗 (Gokaku Ramen)。", icon: "🍜" },
-                        { time: "14:30", title: "太宰府天滿宮", type: "sightseeing", desc: "參拜學問之神、摸御神牛、吃梅枝餅。參觀隈研吾星巴克。", icon: "⛩️", image: "https://upload.wikimedia.org/wikipedia/commons/a/a4/Dazaifu_Tenman-gu_Honden.jpg" },
-                        { time: "17:30", title: "天神散策", type: "sightseeing", desc: "回到天神，漫步大名 (Daimyo) 區域的小巷弄，感受潮流氛圍 (不需血拼)。", icon: "🚶" },
-                        { time: "19:00", title: "晚餐：瓢簞壽司", type: "food", desc: "Hyotan Sushi，天神超人氣排隊名店，食材新鮮 CP 值高！", icon: "🍣" }
+                        { time: "12:00", title: "午餐：元祖 本吉屋", type: "food", desc: "柳川必吃百年老店！蒸籠鰻魚飯炭烤香氣逼人。", icon: "🍱", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Unadon_by_yoppy_in_Nagoya.jpg/640px-Unadon_by_yoppy_in_Nagoya.jpg" },
+                        { time: "13:30", title: "移動：前往太宰府", type: "transport", desc: "柳川 → 太宰府 (電車約 50 分鐘)。", icon: "🚌" },
+                        { time: "14:30", title: "太宰府天滿宮", type: "sightseeing", desc: "參拜學問之神、摸御神牛、吃梅枝餅。*若想吃一蘭五角形碗，分店就在參道上！*", icon: "⛩️", image: "https://upload.wikimedia.org/wikipedia/commons/a/a4/Dazaifu_Tenman-gu_Honden.jpg" },
+                        { time: "16:45", title: "移動：返回天神", type: "transport", desc: "從太宰府站搭乘西鐵電車返回西鐵福岡(天神)站 (約30分鐘)。", icon: "🚃" },
+                        { time: "17:30", title: "Big Camera / 藥妝店", type: "sightseeing", desc: "前往天神 Big Camera 採購電器，或是到附近的藥妝店補貨。", icon: "🛍️" },
+                        { time: "19:00", title: "晚餐：ShinShin 拉麵 (天神本店)", type: "food", desc: "博多純情拉麵代表！就在天神商圈，逛完街直接去吃超順路。必點：煮玉子拉麵、一口餃子。*(人多可改去 PARCO 店)*", icon: "🍜" }
                     ]
                 },
                 {
                     day: 5,
                     date: "1/26 (日)",
-                    title: "福岡美景：大濠公園 & 水炊鍋",
-                    focus: "櫛田神社、大濠公園下午茶、福岡塔夕陽、水炊鍋",
-                    tags: ["美景", "下午茶", "鍋物"],
+                    title: "藥院選物/大濠公園",
+                    focus: "櫛田神社、藥院選物店、大濠公園、水炊鍋",
+                    tags: ["美景", "選物", "鍋物"],
                     activities: [
                         { time: "10:00", title: "櫛田神社", type: "sightseeing", desc: "飯店步行即達，博多的守護神，必看巨大裝飾山笠。", icon: "⛩️" },
                         { time: "11:00", title: "川端通商店街", type: "sightseeing", desc: "充滿在地生活感的商店街。午餐可吃 川端善哉廣場 紅豆湯。", icon: "🚶" },
-                        { time: "13:30", title: "大濠公園 & 美術館", type: "sightseeing", desc: "搭地鐵至「大濠公園站」。湖邊散步，參觀福岡市美術館 (草間彌生南瓜)。", icon: "🦢", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Ohori_Park_04.JPG/640px-Ohori_Park_04.JPG" },
-                        { time: "15:00", title: "湖畔下午茶", type: "food", desc: "推薦：&LOCALS (日式最中餅/茶飲)，坐在玻璃屋內欣賞湖景。", icon: "☕" },
-                        { time: "17:00", title: "福岡塔 & 百道濱", type: "sightseeing", desc: "搭巴士前往，登上福岡塔看夕陽與夜景，或在海邊教堂拍照。", icon: "🗼", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Fukuoka_Tower_October_2011_01.jpg/800px-Fukuoka_Tower_October_2011_01.jpg" },
+                        { time: "13:00", title: "藥院 (Yakuin) 質感選物", type: "sightseeing", desc: "搭乘七隈線至藥院站。探訪 BBB Potters 等生活雜貨名店，氣氛悠閒。", icon: "🫖" },
+                        { time: "15:00", title: "大濠公園 & 日本庭園", type: "sightseeing", desc: "搭乘七隈線至「六本松站」或巴士前往。參觀傳統日式庭園、福岡市美術館 (草間彌生南瓜)。", icon: "🦢", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Ohori_Park_04.JPG/640px-Ohori_Park_04.JPG" },
+                        { time: "16:30", title: "湖畔下午茶：&LOCALS", type: "food", desc: "大濠公園內的質感選物店兼咖啡廳，必吃八女茶與最中餅。", icon: "🍵" },
                         { time: "19:30", title: "晚餐：水炊鍋 (已訂位)", type: "food", desc: "水炊き 橙 (Daidai)，米其林必比登推薦，湯頭超濃郁！(已付訂金：16600日圓)", icon: "🥘" }
                     ]
                 },
@@ -451,38 +454,36 @@
             // Packing list merged into Todo List for initial load
             todoList: {
                 "🎒 行李清單": [
-                    {text: "護照 (效期需6個月以上)", done: false},
-                    {text: "VJW (Visit Japan Web) 截圖", done: false},
-                    {text: "日幣現金 (屋台/交通卡用)", done: false},
-                    {text: "行動電源 & 充電線", done: false},
-                    {text: "網卡 / Roaming", done: false},
-                    {text: "好走的鞋子 (步數很多)", done: false},
-                    {text: "輕便購物袋 (環保袋)", done: false}
+                    {text: "護照 (效期需6個月以上)", done: false, checked: false},
+                    {text: "VJW (Visit Japan Web) 截圖", done: false, checked: false},
+                    {text: "日幣現金 (屋台/交通卡用)", done: false, checked: false},
+                    {text: "行動電源 & 充電線", done: false, checked: false},
+                    {text: "網卡 / Roaming", done: false, checked: false},
+                    {text: "好走的鞋子 (步數很多)", done: false, checked: false},
+                    {text: "輕便購物袋 (環保袋)", done: false, checked: false}
                 ],
                 "行前準備": [
-                    {text: "確認護照效期", done: false},
-                    {text: "填寫 VJW 入境審查", done: false},
-                    {text: "購買旅遊保險", done: false},
-                    {text: "預約 Wifi 機 / 網卡", done: false}
+                    {text: "確認護照效期", done: false, checked: false},
+                    {text: "填寫 VJW 入境審查", done: false, checked: false},
+                    {text: "購買旅遊保險", done: false, checked: false},
+                    {text: "預約 Wifi 機 / 網卡", done: false, checked: false}
                 ],
                 "預約事項": [
-                    {text: "12/24 由布院之森訂票", done: false},
-                    {text: "找大分餐廳", done: false}
+                    {text: "12/24 由布院之森訂票 (已完成)", done: true, checked: true},
+                    {text: "找大分餐廳", done: false, checked: false},
+                    {text: "COMICO 美術館預約", done: false, checked: false}
                 ]
             }
         };
 
         // --- Logic ---
-        // Force update to v2 to ensure new data (dates, lunch update) is loaded
-        // Logic: if local storage doesn't have 'version' or version < 2, use default
+        // Force update to v23 to ensure new data (Day 3 train time update) is loaded
         let storedData = JSON.parse(localStorage.getItem('kyushu_trip_data'));
-        // Check if stored data matches the new requirement (simple check: does Day 1 have a date field?)
-        let tripData = (storedData && storedData.days && storedData.days[0].date) ? storedData : defaultTripData;
+        let tripData = defaultTripData; // Default to new data for this version to force update
 
-        // Force save the new default data if we fell back to it
-        if(tripData === defaultTripData) {
-            localStorage.setItem('kyushu_trip_data', JSON.stringify(tripData));
-        }
+        // If user has edited data, we might want to keep it, but here we prioritize the requested updates.
+        // To be safe, we overwrite with the requested new data structure.
+        localStorage.setItem('kyushu_trip_data', JSON.stringify(tripData));
 
         let currentView = 'info';
         let currentDayIndex = 0;
@@ -762,6 +763,30 @@
                                     <option value="🚂" ${act.icon==='🚂'?'selected':''}>🚂</option>
                                     <option value="👹" ${act.icon==='👹'?'selected':''}>👹</option>
                                     <option value="🛶" ${act.icon==='🛶'?'selected':''}>🛶</option>
+                                    <option value="🍱" ${act.icon==='🍱'?'selected':''}>🍱</option>
+                                    <option value="⛩️" ${act.icon==='⛩️'?'selected':''}>⛩️</option>
+                                    <option value="🚶" ${act.icon==='🚶'?'selected':''}>🚶</option>
+                                    <option value="🍣" ${act.icon==='🍣'?'selected':''}>🍣</option>
+                                    <option value="🦢" ${act.icon==='🦢'?'selected':''}>🦢</option>
+                                    <option value="☕" ${act.icon==='☕'?'selected':''}>☕</option>
+                                    <option value="🗼" ${act.icon==='🗼'?'selected':''}>🗼</option>
+                                    <option value="🥘" ${act.icon==='🥘'?'selected':''}>🥘</option>
+                                    <option value="👋" ${act.icon==='👋'?'selected':''}>👋</option>
+                                    <option value="🛬" ${act.icon==='🛬'?'selected':''}>🛬</option>
+                                    <option value="🎁" ${act.icon==='🎁'?'selected':''}>🎁</option>
+                                    <option value="✈️" ${act.icon==='✈️'?'selected':''}>✈️</option>
+                                    <option value="🚇" ${act.icon==='🚇'?'selected':''}>🚇</option>
+                                    <option value="🚉" ${act.icon==='🚉'?'selected':''}>🚉</option>
+                                    <option value="🚌" ${act.icon==='🚌'?'selected':''}>🚌</option>
+                                    <option value="🎨" ${act.icon==='🎨'?'selected':''}>🎨</option>
+                                    <option value="🍰" ${act.icon==='🍰'?'selected':''}>🍰</option>
+                                    <option value="🍲" ${act.icon==='🍲'?'selected':''}>🍲</option>
+                                    <option value="🌸" ${act.icon==='🌸'?'selected':''}>🌸</option>
+                                    <option value="🍢" ${act.icon==='🍢'?'selected':''}>🍢</option>
+                                    <option value="🥚" ${act.icon==='🥚'?'selected':''}>🥚</option>
+                                    <option value="🚕" ${act.icon==='🚕'?'selected':''}>🚕</option>
+                                    <option value="🌅" ${act.icon==='🌅'?'selected':''}>🌅</option>
+                                    <option value="🫖" ${act.icon==='🫖'?'selected':''}>🫖</option>
                                 </select>
                             </div>
                             <input type="text" value="${act.title}" class="edit-input font-bold" onchange="updateActivity(${dayIndex}, ${actIdx}, 'title', this.value)">
