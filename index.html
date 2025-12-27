@@ -107,10 +107,9 @@
         <div id="chat-messages">
             <div class="message ai-msg">
                 哈囉！我是您的九州 AI 導遊。<br>
-                由布院之森的訂票資訊更新囉！<br>
-                1/24 (五) 14:43 從別府出發，18:10 抵達博多。<br>
-                2號車 5AB、6AB，便當也訂好了，真棒！🍱<br>
-                祝旅途愉快！🌿
+                Day 4 晚上改為先吃 ShinShin 拉麵，再悠閒逛 Big Camera 囉！🍜<br>
+                這個順序可以避開晚餐尖峰，逛街時間也更充裕。<br>
+                祝您旅途愉快！🌿
             </div>
         </div>
         <div class="typing-indicator" id="typing-indicator">Gemini 正在查詢...</div>
@@ -417,8 +416,8 @@
                         { time: "13:30", title: "移動：前往太宰府", type: "transport", desc: "柳川 → 太宰府 (電車約 50 分鐘)。", icon: "🚌" },
                         { time: "14:30", title: "太宰府天滿宮", type: "sightseeing", desc: "參拜學問之神、摸御神牛、吃梅枝餅。*若想吃一蘭五角形碗，分店就在參道上！*", icon: "⛩️", image: "https://upload.wikimedia.org/wikipedia/commons/a/a4/Dazaifu_Tenman-gu_Honden.jpg" },
                         { time: "16:45", title: "移動：返回天神", type: "transport", desc: "從太宰府站搭乘西鐵電車返回西鐵福岡(天神)站 (約30分鐘)。", icon: "🚃" },
-                        { time: "17:30", title: "Big Camera / 藥妝店", type: "sightseeing", desc: "前往天神 Big Camera 採購電器，或是到附近的藥妝店補貨。", icon: "🛍️" },
-                        { time: "19:00", title: "晚餐：ShinShin 拉麵 (天神本店)", type: "food", desc: "博多純情拉麵代表！就在天神商圈，逛完街直接去吃超順路。必點：煮玉子拉麵、一口餃子。*(人多可改去 PARCO 店)*", icon: "🍜" }
+                        { time: "17:30", title: "晚餐：ShinShin 拉麵 (天神本店)", type: "food", desc: "博多純情拉麵代表！就在天神商圈，逛完街直接去吃超順路。必點：煮玉子拉麵、一口餃子。*(人多可改去 PARCO 店)*", icon: "🍜" },
+                        { time: "19:00", title: "Big Camera / 藥妝店", type: "sightseeing", desc: "前往天神 Big Camera 採購電器，或是到附近的藥妝店補貨 (開到很晚)。", icon: "🛍️" }
                     ]
                 },
                 {
@@ -454,30 +453,30 @@
             // Packing list merged into Todo List for initial load
             todoList: {
                 "🎒 行李清單": [
-                    {text: "護照 (效期需6個月以上)", done: false, checked: false},
-                    {text: "VJW (Visit Japan Web) 截圖", done: false, checked: false},
-                    {text: "日幣現金 (屋台/交通卡用)", done: false, checked: false},
-                    {text: "行動電源 & 充電線", done: false, checked: false},
-                    {text: "網卡 / Roaming", done: false, checked: false},
-                    {text: "好走的鞋子 (步數很多)", done: false, checked: false},
-                    {text: "輕便購物袋 (環保袋)", done: false, checked: false}
+                    {text: "護照 (效期需6個月以上)", done: false},
+                    {text: "VJW (Visit Japan Web) 截圖", done: false},
+                    {text: "日幣現金 (屋台/交通卡用)", done: false},
+                    {text: "行動電源 & 充電線", done: false},
+                    {text: "網卡 / Roaming", done: false},
+                    {text: "好走的鞋子 (步數很多)", done: false},
+                    {text: "輕便購物袋 (環保袋)", done: false}
                 ],
                 "行前準備": [
-                    {text: "確認護照效期", done: false, checked: false},
-                    {text: "填寫 VJW 入境審查", done: false, checked: false},
-                    {text: "購買旅遊保險", done: false, checked: false},
-                    {text: "預約 Wifi 機 / 網卡", done: false, checked: false}
+                    {text: "確認護照效期", done: false},
+                    {text: "填寫 VJW 入境審查", done: false},
+                    {text: "購買旅遊保險", done: false},
+                    {text: "預約 Wifi 機 / 網卡", done: false}
                 ],
                 "預約事項": [
-                    {text: "12/24 由布院之森訂票 (已完成)", done: true, checked: true},
-                    {text: "找大分餐廳", done: false, checked: false},
-                    {text: "COMICO 美術館預約", done: false, checked: false}
+                    {text: "12/24 由布院之森訂票", done: false},
+                    {text: "找大分餐廳", done: false},
+                    {text: "COMICO 美術館預約", done: false}
                 ]
             }
         };
 
         // --- Logic ---
-        // Force update to v23 to ensure new data (Day 3 train time update) is loaded
+        // Force update to v24 to ensure new data (day 4 reverse) is loaded
         let storedData = JSON.parse(localStorage.getItem('kyushu_trip_data'));
         let tripData = defaultTripData; // Default to new data for this version to force update
 
