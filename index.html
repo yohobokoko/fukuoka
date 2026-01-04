@@ -107,9 +107,9 @@
         <div id="chat-messages">
             <div class="message ai-msg">
                 哈囉！我是您的九州 AI 導遊。<br>
-                Day 4 晚上改為先吃 ShinShin 拉麵，再悠閒逛 Big Camera 囉！🍜<br>
-                這個順序可以避開晚餐尖峰，逛街時間也更充裕。<br>
-                祝您旅途愉快！🌿
+                我新增了「🚍 交通攻略」頁面，幫您整理了每一段的購票方式！<br>
+                待辦事項裡也同步加入了購票提醒囉！📝<br>
+                祝旅途愉快！🌿
             </div>
         </div>
         <div class="typing-indicator" id="typing-indicator">Gemini 正在查詢...</div>
@@ -125,13 +125,14 @@
             <div id="main-title-container">
                 <h1 class="text-4xl font-bold text-yellow-900 mb-2 tracking-wide">王家北九州六日行</h1>
                 <p class="text-gray-600 text-lg font-medium">大分 ✕ 別府 ✕ 柳川 ✕ 福岡</p>
-                <p class="text-orange-500 text-md font-bold mt-2">2025.1.22 (三) - 1.27 (一)</p>
+                <p class="text-orange-500 text-md font-bold mt-2">2025.1.22 (四) - 1.27 (二)</p>
             </div>
         </div>
 
         <nav class="flex gap-2 mb-6 overflow-x-auto pb-2 md:pb-0">
             <button onclick="switchView('info')" class="nav-btn flex-shrink-0 bg-orange-100 text-orange-700 px-4 py-2 rounded-lg text-sm font-bold hover:bg-orange-200 transition whitespace-nowrap">ℹ️ 旅程重點</button>
             <button onclick="switchView('itinerary')" class="nav-btn flex-shrink-0 bg-white text-gray-600 border border-gray-200 px-4 py-2 rounded-lg text-sm font-bold hover:bg-gray-50 transition whitespace-nowrap">📅 詳細行程</button>
+            <button onclick="switchView('transport')" class="nav-btn flex-shrink-0 bg-white text-gray-600 border border-gray-200 px-4 py-2 rounded-lg text-sm font-bold hover:bg-gray-50 transition whitespace-nowrap">🚍 交通攻略</button>
             <button onclick="switchView('todo')" class="nav-btn flex-shrink-0 bg-white text-gray-600 border border-gray-200 px-4 py-2 rounded-lg text-sm font-bold hover:bg-gray-50 transition whitespace-nowrap">📝 待辦事項</button>
             <button onclick="switchView('souvenir')" class="nav-btn flex-shrink-0 bg-white text-gray-600 border border-gray-200 px-4 py-2 rounded-lg text-sm font-bold hover:bg-gray-50 transition whitespace-nowrap">🎁 必買伴手禮</button>
         </nav>
@@ -240,6 +241,110 @@
             <button id="add-activity-btn" class="hidden w-full py-3 rounded-xl border-2 border-dashed border-gray-300 text-gray-500 hover:border-orange-400 hover:text-orange-500 transition font-bold" onclick="addActivity()">
                 + 新增行程
             </button>
+        </div>
+    </template>
+
+    <template id="transport-template">
+        <div class="space-y-6 animate-fade-in fade-enter">
+            <div class="bg-blue-50 rounded-3xl p-8 border border-blue-200 relative overflow-hidden">
+                <div class="relative z-10">
+                    <h2 class="text-3xl font-bold text-blue-900 mb-2">🚍 交通攻略</h2>
+                    <p class="text-blue-800 opacity-90 text-lg">免去迷路煩惱！這是您的點對點購票指南。</p>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Day 1 -->
+                <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm">
+                    <h3 class="font-bold text-lg text-gray-800 mb-3 border-b pb-2 border-gray-100">Day 1: 機場 ➔ 博多 ➔ 大分</h3>
+                    <div class="space-y-3">
+                        <div class="flex gap-3">
+                            <span class="text-2xl">🚇</span>
+                            <div>
+                                <h4 class="font-bold text-gray-700">機場 → 博多 (地鐵)</h4>
+                                <p class="text-xs text-gray-500">國內線航廈B1搭乘。刷 <b>IC 卡</b> 或 <b>售票機購票</b> (約260円)。</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-3">
+                            <span class="text-2xl">🚄</span>
+                            <div>
+                                <h4 class="font-bold text-gray-700">博多 → 大分 (JR Sonic)</h4>
+                                <p class="text-xs text-gray-500">博多站綠色窗口或售票機。購買 <b>特急券+乘車券</b> (單程約5,000~6,000円)。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Day 2 -->
+                <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm">
+                    <h3 class="font-bold text-lg text-gray-800 mb-3 border-b pb-2 border-gray-100">Day 2: 大分 ⇋ 由布院</h3>
+                    <div class="space-y-3">
+                        <div class="flex gap-3">
+                            <span class="text-2xl">🚂</span>
+                            <div>
+                                <h4 class="font-bold text-gray-700">JR 久大本線 (來回)</h4>
+                                <p class="text-xs text-gray-500">直接刷 <b>IC 卡</b> 進出站即可 (單程約950円)。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Day 3 -->
+                <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm">
+                    <h3 class="font-bold text-lg text-gray-800 mb-3 border-b pb-2 border-gray-100">Day 3: 別府地獄 & 回博多</h3>
+                    <div class="space-y-3">
+                        <div class="flex gap-3">
+                            <span class="text-2xl">🚌</span>
+                            <div>
+                                <h4 class="font-bold text-gray-700">別府站 → 海地獄前</h4>
+                                <p class="text-xs text-gray-500">別府站<b>西口</b>搭乘龜之井巴士(2/5/41/43號)。<b>上車抽整理券，下車投幣/刷IC卡</b>。</p>
+                            </div>
+                        </div>
+                         <div class="flex gap-3">
+                            <span class="text-2xl">♨️</span>
+                            <div>
+                                <h4 class="font-bold text-gray-700">地獄門票</h4>
+                                <p class="text-xs text-gray-500">若只逛海地獄、灶地獄，建議<b>現場買單券</b> (400円/處) 比較划算。</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-3">
+                            <span class="text-2xl">🚂</span>
+                            <div>
+                                <h4 class="font-bold text-gray-700">別府 → 博多 (由布院之森)</h4>
+                                <p class="text-xs text-gray-500"><b>已訂位</b>。憑車票直接上車 (2號車)。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Day 4 -->
+                <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm">
+                    <h3 class="font-bold text-lg text-gray-800 mb-3 border-b pb-2 border-gray-100">Day 4: 柳川 & 太宰府</h3>
+                    <div class="space-y-3">
+                        <div class="flex gap-3">
+                            <span class="text-2xl">🎫</span>
+                            <div>
+                                <h4 class="font-bold text-gray-700">太宰府柳川觀光套票</h4>
+                                <p class="text-xs text-gray-500"><b>西鐵天神站 (2F)</b> 櫃台購買 (約3,000円)。包含<b>來回電車</b>與<b>柳川遊船</b>。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Day 5 & 6 -->
+                <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm">
+                    <h3 class="font-bold text-lg text-gray-800 mb-3 border-b pb-2 border-gray-100">Day 5 & 6: 市區移動</h3>
+                    <div class="space-y-3">
+                        <div class="flex gap-3">
+                            <span class="text-2xl">🚇</span>
+                            <div>
+                                <h4 class="font-bold text-gray-700">前往藥院 / 機場</h4>
+                                <p class="text-xs text-gray-500">全程使用 <b>IC 卡</b> 搭乘地鐵即可。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </template>
 
@@ -467,8 +572,15 @@
                     {text: "購買旅遊保險", done: false},
                     {text: "預約 Wifi 機 / 網卡", done: false}
                 ],
+                "交通購票清單 (待辦)": [
+                    {text: "Day 1 博多→大分 (JR Sonic)", done: false},
+                    {text: "Day 2 大分↔由布院 (JR)", done: false},
+                    {text: "Day 3 大分→別府 (JR)", done: false},
+                    {text: "Day 3 別府地獄通票 (視情況)", done: false},
+                    {text: "Day 4 太宰府柳川套票 (天神站)", done: false},
+                ],
                 "預約事項": [
-                    {text: "12/24 由布院之森訂票", done: false},
+                    {text: "12/24 由布院之森訂票 (已完成)", done: true},
                     {text: "找大分餐廳", done: false},
                     {text: "COMICO 美術館預約", done: false}
                 ]
@@ -476,7 +588,7 @@
         };
 
         // --- Logic ---
-        // Force update to v24 to ensure new data (day 4 reverse) is loaded
+        // Force update to v27 to ensure new data (Transport Guide Page + Todo update) is loaded
         let storedData = JSON.parse(localStorage.getItem('kyushu_trip_data'));
         let tripData = defaultTripData; // Default to new data for this version to force update
 
@@ -507,6 +619,7 @@
                 if((view === 'info' && btn.innerText.includes('重點')) || 
                    (view === 'itinerary' && btn.innerText.includes('行程')) ||
                    (view === 'souvenir' && btn.innerText.includes('伴手禮')) ||
+                   (view === 'transport' && btn.innerText.includes('交通')) ||
                    (view === 'todo' && btn.innerText.includes('待辦'))) {
                     btn.classList.remove('bg-white', 'text-gray-600', 'border-gray-200');
                     btn.classList.add('bg-orange-100', 'text-orange-700', 'border-transparent');
@@ -517,7 +630,7 @@
             });
 
             // Toggle Sidebar for Day Selection
-            if (view === 'todo' || view === 'souvenir' || view === 'info') {
+            if (view === 'todo' || view === 'souvenir' || view === 'info' || view === 'transport') {
                 sidebarContainer.classList.add('hidden');
                 // Adjust main content to full width when sidebar is hidden
                 document.getElementById('main-content').classList.remove('lg:col-span-9');
@@ -530,6 +643,7 @@
 
             if (view === 'info') renderInfo();
             else if (view === 'souvenir') renderSouvenir();
+            else if (view === 'transport') renderTransport();
             else if (view === 'todo') renderTodo();
             else renderItinerary(currentDayIndex);
         };
@@ -596,7 +710,7 @@
                  titleContainer.innerHTML = `
                     <h1 class="text-4xl font-bold text-yellow-900 mb-2 tracking-wide">${tripData.mainTitle}</h1>
                     <p class="text-gray-600 text-lg font-medium">${tripData.subTitle}</p>
-                    <p class="text-orange-500 text-md font-bold mt-2">2025.1.22 (三) - 1.27 (一)</p>
+                    <p class="text-orange-500 text-md font-bold mt-2">2025.1.22 (四) - 1.27 (二)</p>
                  `;
              }
         }
@@ -711,6 +825,13 @@
 
         function renderSouvenir() {
             const template = document.getElementById('souvenir-template').content.cloneNode(true);
+            mainContent.innerHTML = '';
+            mainContent.appendChild(template);
+            renderHeaderTitle();
+        }
+
+        function renderTransport() {
+            const template = document.getElementById('transport-template').content.cloneNode(true);
             mainContent.innerHTML = '';
             mainContent.appendChild(template);
             renderHeaderTitle();
