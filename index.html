@@ -107,8 +107,11 @@
         <div id="chat-messages">
             <div class="message ai-msg">
                 哈囉！我是您的九州 AI 導遊。<br>
-                頁面順序調整完畢！現在一進來就是「詳細行程」，「旅程重點」排在第二個囉！<br>
-                這樣查找行程更順手！🌿
+                收到！已經將日期修正為：<br>
+                Day 1 = 1/22 (四)<br>
+                Day 3 = 1/24 (六) 由布院之森<br>
+                現在日期與星期都完全對應囉！📅<br>
+                祝旅途愉快！🌿
             </div>
         </div>
         <div class="typing-indicator" id="typing-indicator">Gemini 正在查詢...</div>
@@ -257,7 +260,7 @@
                 <!-- Day 1 -->
                 <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm">
                     <h3 class="font-bold text-lg text-gray-800 mb-3 border-b pb-2 border-gray-100 flex items-center justify-between">
-                        Day 1 (1/22): 機場 ➔ 博多 ➔ 大分
+                        Day 1 (1/22 四): 機場 ➔ 博多 ➔ 大分
                         <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">JR Sonic</span>
                     </h3>
                     <div class="space-y-4 text-sm text-gray-700">
@@ -299,7 +302,7 @@
                 <!-- Day 2 -->
                 <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm">
                     <h3 class="font-bold text-lg text-gray-800 mb-3 border-b pb-2 border-gray-100 flex items-center justify-between">
-                        Day 2 (1/23): 大分 ⇋ 由布院
+                        Day 2 (1/23 五): 大分 ⇋ 由布院
                         <span class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full">JR 普通車</span>
                     </h3>
                     <div class="space-y-4 text-sm text-gray-700">
@@ -337,7 +340,7 @@
                 <!-- Day 3 -->
                 <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm">
                     <h3 class="font-bold text-lg text-gray-800 mb-3 border-b pb-2 border-gray-100 flex items-center justify-between">
-                        Day 3 (1/24): 別府地獄 & 回博多
+                        Day 3 (1/24 六): 別府地獄 & 回博多
                         <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">巴士 + 由布院之森</span>
                     </h3>
                     <div class="space-y-4 text-sm text-gray-700">
@@ -377,7 +380,7 @@
                 <!-- Day 4 -->
                 <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm">
                     <h3 class="font-bold text-lg text-gray-800 mb-3 border-b pb-2 border-gray-100 flex items-center justify-between">
-                        Day 4 (1/25): 柳川 & 太宰府
+                        Day 4 (1/25 日): 柳川 & 太宰府
                         <span class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">西鐵電車</span>
                     </h3>
                     <div class="space-y-4 text-sm text-gray-700">
@@ -416,7 +419,7 @@
 
                 <!-- Day 5 & 6 -->
                 <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm">
-                    <h3 class="font-bold text-lg text-gray-800 mb-3 border-b pb-2 border-gray-100">Day 5 & 6: 市區移動</h3>
+                    <h3 class="font-bold text-lg text-gray-800 mb-3 border-b pb-2 border-gray-100">Day 5 (一) & 6 (二): 市區移動</h3>
                     <div class="space-y-3">
                         <div class="flex gap-3">
                             <span class="text-2xl">🚇</span>
@@ -428,108 +431,22 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </template>
-
-    <template id="todo-template">
-        <div class="space-y-6 animate-fade-in fade-enter">
-            <div class="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 relative overflow-hidden">
-                 <div class="relative z-10">
-                    <h2 class="text-3xl font-bold text-green-700 mb-2">📝 待辦事項 & 行李清單</h2>
-                    <p class="text-gray-500">行前準備、預約提醒、必帶物品</p>
-                </div>
-                <div class="absolute top-0 right-0 w-32 h-32 bg-green-100 rounded-full mix-blend-multiply filter blur-3xl opacity-50 transform translate-x-10 -translate-y-10"></div>
-            </div>
-
-            <!-- Todo Lists by Category -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="todo-container">
-                <!-- Injected by JS -->
-            </div>
-        </div>
-    </template>
-
-    <template id="souvenir-template">
-        <div class="space-y-6 animate-fade-in fade-enter">
-            <div class="bg-gradient-to-br from-pink-50 to-orange-50 rounded-3xl p-8 border border-pink-200 relative overflow-hidden">
-                <div class="relative z-10">
-                    <h2 class="text-3xl font-bold text-pink-900 mb-4">🎁 九州必買伴手禮</h2>
-                    <p class="text-pink-800 opacity-90 leading-relaxed text-lg">這裡精選了福岡與九州最受歡迎的伴手禮清單。</p>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Sweet Classics -->
-                <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm hover-card">
-                    <h3 class="font-bold text-lg text-gray-800 mb-2 border-b pb-2 border-gray-100">🍰 經典甜點</h3>
-                    <ul class="space-y-4">
-                        <li class="flex gap-3 items-center">
-                            <span class="text-2xl">🌕</span>
-                            <div><h4 class="font-bold text-gray-700">明月堂 博多通饅頭</h4><p class="text-xs text-gray-500">連續獲獎的福岡代表銘菓，白豆沙餡奶香濃郁。</p></div>
-                        </li>
-                         <li class="flex gap-3 items-center">
-                            <span class="text-2xl">🍮</span>
-                            <div><h4 class="font-bold text-gray-700">如水庵 筑紫麻糬</h4><p class="text-xs text-gray-500">質感爆棚的日式點心，撒上黃豆粉淋上黑糖蜜。</p></div>
-                        </li>
-                        <li class="flex gap-3 items-center">
-                            <span class="text-2xl">🐤</span>
-                            <div><h4 class="font-bold text-gray-700">吉野堂 小雞饅頭</h4><p class="text-xs text-gray-500">造型可愛的小雞，內包綿密黃豆沙，經典不敗。</p></div>
-                        </li>
-                        <li class="flex gap-3 items-center">
-                            <span class="text-2xl">🍓</span>
-                            <div><h4 class="font-bold text-gray-700">AMANBERRY 草莓奶油餅乾</h4><p class="text-xs text-gray-500">新晉人氣王！貓舌餅乾夾著甘王草莓白巧克力。</p></div>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Savory & Snacks -->
-                <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm hover-card">
-                    <h3 class="font-bold text-lg text-gray-800 mb-2 border-b pb-2 border-gray-100">🍘 鹹食 & 下酒菜</h3>
-                    <ul class="space-y-4">
-                        <li class="flex gap-3 items-center">
-                            <span class="text-2xl">🦐</span>
-                            <div><h4 class="font-bold text-gray-700">福太郎 明太子仙貝 (Menbei)</h4><p class="text-xs text-gray-500">福岡最夯伴手禮之一！酥脆微辣，海鮮味濃郁。</p></div>
-                        </li>
-                         <li class="flex gap-3 items-center">
-                            <span class="text-2xl">🌯</span>
-                            <div><h4 class="font-bold text-gray-700">千鳥屋本家 捲心酥</h4><p class="text-xs text-gray-500">Tirolian 捲心酥，包著香草、咖啡等奶油餡。</p></div>
-                        </li>
-                        <li class="flex gap-3 items-center">
-                            <span class="text-2xl">🎎</span>
-                            <div><h4 class="font-bold text-gray-700">二鶴堂 博多之女</h4><p class="text-xs text-gray-500">年輪蛋糕包著紅豆羊羹，口感濕潤，博多傳統美味。</p></div>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Seasoning & Ramen -->
-                <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm hover-card md:col-span-2">
-                    <h3 class="font-bold text-lg text-gray-800 mb-2 border-b pb-2 border-gray-100">🍜 調味與拉麵</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <ul class="space-y-4">
-                            <li class="flex gap-3 items-center">
-                                <span class="text-2xl">🍜</span>
-                                <div><h4 class="font-bold text-gray-700">一蘭拉麵 / 博多拉麵包</h4><p class="text-xs text-gray-500">雖然台灣有賣，但福岡限定口味值得帶！</p></div>
-                            </li>
-                            <li class="flex gap-3 items-center">
-                                <span class="text-2xl">🌶️</span>
-                                <div><h4 class="font-bold text-gray-700">柚子胡椒</h4><p class="text-xs text-gray-500">九州特產調味料，清新的柚子香帶點辣。</p></div>
-                            </li>
-                        </ul>
-                        <ul class="space-y-4">
-                            <li class="flex gap-3 items-center">
-                                <span class="text-2xl">🐟</span>
-                                <div><h4 class="font-bold text-gray-700">YAMAYA 軟管明太子醬</h4><p class="text-xs text-gray-500">超方便！擠出來就能配飯、塗麵包。</p></div>
-                            </li>
-                            <li class="flex gap-3 items-center">
-                                <span class="text-2xl">🥚</span>
-                                <div><h4 class="font-bold text-gray-700">石村萬盛堂 鶴乃子</h4><p class="text-xs text-gray-500">百年老店，像水煮蛋一樣可愛的棉花糖甜點。</p></div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
             
-            <div class="bg-yellow-50 p-4 rounded-xl border border-yellow-200 text-sm text-yellow-800 text-center mt-4">
-                💡 <b>小撇步：</b> 大部分伴手禮在 <b>福岡機場免稅店</b> 都買得到，建議最後一天再一次買齊！
+            <!-- Uber/Taxi Tip Box -->
+            <div class="bg-yellow-50 p-4 rounded-xl border border-yellow-200 mt-6 shadow-sm">
+                <h3 class="font-bold text-yellow-800 mb-2 flex items-center gap-2">
+                    <span class="text-xl">🚕</span> 聰明移動撇步：善用 Uber / 計程車
+                </h3>
+                <p class="text-sm text-yellow-800 leading-relaxed">
+                    在九州（特別是福岡市區、由布院、別府），<b>Uber App</b> 可以直接叫計程車，非常方便！<br>
+                    雖然比大眾運輸貴一點，但若有 <b>3-4 人分攤</b> 其實很划算，且能省去拉行李找電梯的麻煩。<br>
+                    <span class="font-bold mt-1 block">✨ 推薦使用時機：</span>
+                    <ul class="list-disc pl-5 mt-1 text-xs">
+                         <li><b>Day 1 & 6</b>: 機場 ⇄ 飯店 (不用轉車搬行李)</li>
+                         <li><b>Day 2</b>: 金鱗湖 → 由布院車站 (回程腳痠時)</li>
+                         <li><b>Day 4</b>: 柳川吃完鰻魚飯 → 柳川車站 (省去等接駁車時間)</li>
+                    </ul>
+                </p>
             </div>
         </div>
     </template>
@@ -634,7 +551,7 @@
             days: [
                 {
                     day: 1,
-                    date: "1/22 (三)",
+                    date: "1/22 (四)",
                     title: "抵達九州 & 機場吃小物",
                     focus: "九州之旅啟程！🍜 機場吃小物 ➔ 🚄 搭乘藍色音速號奔馳 ➔ 🥩 大分市區享用豐後牛晚餐",
                     tags: ["移動日", "美食", "拉麵"],
@@ -650,7 +567,7 @@
                 },
                 {
                     day: 2,
-                    date: "1/23 (四)",
+                    date: "1/23 (五)",
                     title: "慢遊童話小鎮：由布院",
                     focus: "COMICO 美術館、金鱗湖、湯之坪街道、釜飯",
                     tags: ["自然", "藝術", "美食"],
@@ -668,7 +585,7 @@
                 },
                 {
                     day: 3,
-                    date: "1/24 (五)",
+                    date: "1/24 (六)",
                     title: "別府地獄 由布院之森",
                     focus: "別府地獄精華、地獄蒸料理、由布院之森回程、燒肉大餐",
                     tags: ["地獄溫泉", "觀光列車", "燒肉"],
@@ -683,7 +600,7 @@
                 },
                 {
                     day: 4,
-                    date: "1/25 (六)",
+                    date: "1/25 (日)",
                     title: "柳川遊船與太宰府",
                     focus: "柳川遊船、元祖本吉屋鰻魚飯、太宰府天滿宮、Big Camera採購、ShinShin拉麵",
                     tags: ["水鄉", "鰻魚飯", "散策"],
@@ -700,7 +617,7 @@
                 },
                 {
                     day: 5,
-                    date: "1/26 (日)",
+                    date: "1/26 (一)",
                     title: "藥院選物/大濠公園",
                     focus: "櫛田神社、藥院選物店、大濠公園、水炊鍋",
                     tags: ["美景", "選物", "鍋物"],
@@ -715,7 +632,7 @@
                 },
                 {
                     day: 6,
-                    date: "1/27 (一)",
+                    date: "1/27 (二)",
                     title: "最後衝刺 & 快樂返家",
                     focus: "悠閒退房、機場免稅店掃貨",
                     tags: ["購物", "返程"],
@@ -745,8 +662,15 @@
                     {text: "購買旅遊保險", done: false},
                     {text: "預約 Wifi 機 / 網卡", done: false}
                 ],
+                "交通購票清單 (待辦)": [
+                    {text: "Day 1 博多→大分 (JR Sonic)", done: false},
+                    {text: "Day 2 大分↔由布院 (JR)", done: false},
+                    {text: "Day 3 大分→別府 (JR)", done: false},
+                    {text: "Day 3 別府地獄通票 (視情況)", done: false},
+                    {text: "Day 4 太宰府柳川套票 (天神站)", done: false},
+                ],
                 "預約事項": [
-                    {text: "12/24 由布院之森訂票", done: false},
+                    {text: "12/24 由布院之森訂票 (已完成)", done: true},
                     {text: "找大分餐廳", done: false},
                     {text: "COMICO 美術館預約", done: false}
                 ]
@@ -754,7 +678,7 @@
         };
 
         // --- Logic ---
-        // Force update to v42 to ensure new data (day 2 swap) is loaded
+        // Force update to v47 to ensure new data (Corrected 2025 weekdays) is loaded
         let storedData = JSON.parse(localStorage.getItem('kyushu_trip_data'));
         let tripData = defaultTripData; // Default to new data for this version to force update
 
