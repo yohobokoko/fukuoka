@@ -66,20 +66,12 @@
         @media print {
             body { background-color: white; background-image: none; }
             .no-print { display: none !important; }
-            #chat-widget, #ai-toggle-btn, #sync-modal { display: none !important; }
+            #chat-widget, #ai-toggle-btn { display: none !important; }
         }
 
-        /* Edit Mode Styles */
-        .edit-input { border: 1px solid #cbd5e1; border-radius: 0.375rem; padding: 0.25rem 0.5rem; width: 100%; font-size: 0.875rem; color: #4a4a4a; margin-bottom: 0.25rem; background: white; }
-        .edit-input:focus { outline: none; border-color: #d97706; ring: 2px solid #d97706; }
-        .edit-textarea { width: 100%; min-height: 80px; resize: vertical; }
-        .delete-btn { position: absolute; top: -10px; right: -10px; background: #ef4444; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 12px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.2); z-index: 20; }
+        /* Todo Input removed for read-only view, but keeping basic styles just in case */
         .todo-input { border: 1px solid #e5e7eb; border-radius: 0.5rem; padding: 0.3rem 0.6rem; width: 100%; transition: all 0.2s; font-size: 0.9rem; }
         .todo-input:focus { outline: none; border-color: #d97706; ring: 2px solid #fdba74; }
-
-        /* Sync Modal */
-        #sync-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 100; justify-content: center; align-items: center; backdrop-filter: blur(2px); }
-        .modal-content { background: white; width: 90%; max-width: 500px; padding: 2rem; border-radius: 1.5rem; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); position: relative; }
     </style>
     <script>
         function imgError(image) {
@@ -90,48 +82,6 @@
     </script>
 </head>
 <body>
-
-    <!-- Sync Modal -->
-    <div id="sync-modal">
-        <div class="modal-content animate-fade-in">
-            <button onclick="closeSyncModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
-            <h3 class="text-2xl font-bold text-gray-800 mb-2">☁️ 同步/備份行程</h3>
-            <p class="text-sm text-gray-500 mb-6">因為沒有伺服器，請手動複製代碼來同步裝置。</p>
-            
-            <div class="space-y-6">
-                <!-- Export Section -->
-                <div class="bg-orange-50 p-4 rounded-xl border border-orange-100">
-                    <h4 class="font-bold text-orange-800 mb-2 flex items-center gap-2">📤 步驟 1：產生代碼 (在電腦上做)</h4>
-                    <p class="text-xs text-orange-600 mb-3">修改完行程後，點擊按鈕複製代碼，並<b>傳送到手機</b>(如LINE)。</p>
-                    <button onclick="copyDataToClipboard()" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg transition flex justify-center items-center gap-2">
-                        📋 複製完整資料代碼
-                    </button>
-                </div>
-
-                <!-- Import Section -->
-                <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
-                    <h4 class="font-bold text-blue-800 mb-2 flex items-center gap-2">📥 步驟 2：讀取代碼 (在手機上做)</h4>
-                    <p class="text-xs text-blue-600 mb-3">複製收到的代碼，點擊按鈕貼上，即可同步。</p>
-                    <button onclick="pasteDataFromClipboard()" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition flex justify-center items-center gap-2">
-                        📋 貼上代碼並同步
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Header Actions (Simplified) -->
-    <div class="fixed top-4 right-4 no-print z-50 flex flex-wrap gap-2 justify-end">
-        <!-- Edit Toggle -->
-        <button id="edit-toggle-btn" onclick="toggleEditMode()" class="bg-blue-600 text-white px-3 py-2 rounded-lg shadow-sm hover:bg-blue-700 flex items-center gap-1 font-bold transition text-xs md:text-sm">
-            ✏️ 編輯
-        </button>
-        
-        <!-- Sync Button -->
-        <button onclick="openSyncModal()" class="bg-green-600 text-white px-3 py-2 rounded-lg shadow-sm hover:bg-green-700 flex items-center gap-1 font-bold transition text-xs md:text-sm">
-            ☁️ 同步
-        </button>
-    </div>
 
     <!-- AI Toggle Button -->
     <div id="ai-toggle-btn" class="no-print" onclick="toggleChat()">✨</div>
@@ -145,9 +95,9 @@
         <div id="chat-messages">
             <div class="message ai-msg">
                 哈囉！我是您的九州 AI 導遊。<br>
-                日期星期幾這次絕對正確了！<br>
-                Day 1 是 1/22 (四)，Day 3 是 1/24 (六)。<br>
-                祝旅途愉快！🌿
+                所有行程都已經定案囉！<br>
+                從 1/22 到 1/27，享受這趟美好的旅程吧！🌿<br>
+                (此版本為純瀏覽模式)
             </div>
         </div>
         <div class="typing-indicator" id="typing-indicator">Gemini 正在查詢...</div>
@@ -201,7 +151,8 @@
         <div class="space-y-6 animate-fade-in fade-enter">
             <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-3xl p-8 border border-orange-200 relative overflow-hidden">
                 <div class="relative z-10" id="intro-text-container">
-                    <!-- Title and Desc injected here -->
+                     <h2 class="text-3xl font-bold text-orange-900 mb-4">旅程概覽</h2>
+                    <p class="text-orange-800 opacity-90 leading-relaxed text-lg">這是一趟為王家量身打造的六日北九州之旅。我們將造訪大分、別府、由布院、柳川與福岡。<br>行程包含了溫泉、觀光列車、遊船以及當地的特色美食。<br>請放慢腳步，享受這段美好的旅程。</p>
                 </div>
                 <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-orange-200 rounded-full opacity-50 blur-2xl"></div>
             </div>
@@ -267,19 +218,11 @@
                 <div class="mt-4 flex gap-2" id="day-tags"></div>
             </div>
             
-            <!-- Timeline Container with optimized spacing -->
-            <!-- Adjusted left padding to bring timeline closer to time labels -->
+            <!-- Timeline Container -->
             <div class="relative space-y-4 before:content-[''] before:absolute before:left-[52px] md:before:left-[60px] before:top-4 before:bottom-4 before:w-0.5 before:bg-gray-200" id="timeline-container"></div>
             
-            <!-- Navigation Footer for Easy Access -->
-            <div class="flex justify-between mt-8 pt-4 border-t border-gray-100" id="timeline-nav-footer">
-                <!-- Nav buttons injected by JS -->
-            </div>
-
-            <!-- Add Button (Edit Mode) -->
-            <button id="add-activity-btn" class="hidden w-full py-3 rounded-xl border-2 border-dashed border-gray-300 text-gray-500 hover:border-orange-400 hover:text-orange-500 transition font-bold" onclick="addActivity()">
-                + 新增行程
-            </button>
+            <!-- Navigation Footer -->
+            <div class="flex justify-between mt-8 pt-4 border-t border-gray-100" id="timeline-nav-footer"></div>
         </div>
     </template>
 
@@ -483,6 +426,109 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="todo-template">
+        <div class="space-y-6 animate-fade-in fade-enter">
+            <div class="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 relative overflow-hidden">
+                 <div class="relative z-10">
+                    <h2 class="text-3xl font-bold text-green-700 mb-2">📝 待辦事項 & 行李清單</h2>
+                    <p class="text-gray-500">行前準備、預約提醒、必帶物品</p>
+                </div>
+                <div class="absolute top-0 right-0 w-32 h-32 bg-green-100 rounded-full mix-blend-multiply filter blur-3xl opacity-50 transform translate-x-10 -translate-y-10"></div>
+            </div>
+
+            <!-- Todo Lists by Category -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="todo-container">
+                <!-- Injected by JS -->
+            </div>
+        </div>
+    </template>
+
+    <template id="souvenir-template">
+        <div class="space-y-6 animate-fade-in fade-enter">
+            <div class="bg-gradient-to-br from-pink-50 to-orange-50 rounded-3xl p-8 border border-pink-200 relative overflow-hidden">
+                <div class="relative z-10">
+                    <h2 class="text-3xl font-bold text-pink-900 mb-4">🎁 九州必買伴手禮</h2>
+                    <p class="text-pink-800 opacity-90 leading-relaxed text-lg">這裡精選了福岡與九州最受歡迎的伴手禮清單。</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Sweet Classics -->
+                <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm hover-card">
+                    <h3 class="font-bold text-lg text-gray-800 mb-2 border-b pb-2 border-gray-100">🍰 經典甜點</h3>
+                    <ul class="space-y-4">
+                        <li class="flex gap-3 items-center">
+                            <span class="text-2xl">🌕</span>
+                            <div><h4 class="font-bold text-gray-700">明月堂 博多通饅頭</h4><p class="text-xs text-gray-500">連續獲獎的福岡代表銘菓，白豆沙餡奶香濃郁。</p></div>
+                        </li>
+                         <li class="flex gap-3 items-center">
+                            <span class="text-2xl">🍮</span>
+                            <div><h4 class="font-bold text-gray-700">如水庵 筑紫麻糬</h4><p class="text-xs text-gray-500">質感爆棚的日式點心，撒上黃豆粉淋上黑糖蜜。</p></div>
+                        </li>
+                        <li class="flex gap-3 items-center">
+                            <span class="text-2xl">🐤</span>
+                            <div><h4 class="font-bold text-gray-700">吉野堂 小雞饅頭</h4><p class="text-xs text-gray-500">造型可愛的小雞，內包綿密黃豆沙，經典不敗。</p></div>
+                        </li>
+                        <li class="flex gap-3 items-center">
+                            <span class="text-2xl">🍓</span>
+                            <div><h4 class="font-bold text-gray-700">AMANBERRY 草莓奶油餅乾</h4><p class="text-xs text-gray-500">新晉人氣王！貓舌餅乾夾著甘王草莓白巧克力。</p></div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Savory & Snacks -->
+                <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm hover-card">
+                    <h3 class="font-bold text-lg text-gray-800 mb-2 border-b pb-2 border-gray-100">🍘 鹹食 & 下酒菜</h3>
+                    <ul class="space-y-4">
+                        <li class="flex gap-3 items-center">
+                            <span class="text-2xl">🦐</span>
+                            <div><h4 class="font-bold text-gray-700">福太郎 明太子仙貝 (Menbei)</h4><p class="text-xs text-gray-500">福岡最夯伴手禮之一！酥脆微辣，海鮮味濃郁。</p></div>
+                        </li>
+                         <li class="flex gap-3 items-center">
+                            <span class="text-2xl">🌯</span>
+                            <div><h4 class="font-bold text-gray-700">千鳥屋本家 捲心酥</h4><p class="text-xs text-gray-500">Tirolian 捲心酥，包著香草、咖啡等奶油餡。</p></div>
+                        </li>
+                        <li class="flex gap-3 items-center">
+                            <span class="text-2xl">🎎</span>
+                            <div><h4 class="font-bold text-gray-700">二鶴堂 博多之女</h4><p class="text-xs text-gray-500">年輪蛋糕包著紅豆羊羹，口感濕潤，博多傳統美味。</p></div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Seasoning & Ramen -->
+                <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm hover-card md:col-span-2">
+                    <h3 class="font-bold text-lg text-gray-800 mb-2 border-b pb-2 border-gray-100">🍜 調味與拉麵</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <ul class="space-y-4">
+                            <li class="flex gap-3 items-center">
+                                <span class="text-2xl">🍜</span>
+                                <div><h4 class="font-bold text-gray-700">一蘭拉麵 / 博多拉麵包</h4><p class="text-xs text-gray-500">雖然台灣有賣，但福岡限定口味值得帶！</p></div>
+                            </li>
+                            <li class="flex gap-3 items-center">
+                                <span class="text-2xl">🌶️</span>
+                                <div><h4 class="font-bold text-gray-700">柚子胡椒</h4><p class="text-xs text-gray-500">九州特產調味料，清新的柚子香帶點辣。</p></div>
+                            </li>
+                        </ul>
+                        <ul class="space-y-4">
+                            <li class="flex gap-3 items-center">
+                                <span class="text-2xl">🐟</span>
+                                <div><h4 class="font-bold text-gray-700">YAMAYA 軟管明太子醬</h4><p class="text-xs text-gray-500">超方便！擠出來就能配飯、塗麵包。</p></div>
+                            </li>
+                            <li class="flex gap-3 items-center">
+                                <span class="text-2xl">🥚</span>
+                                <div><h4 class="font-bold text-gray-700">石村萬盛堂 鶴乃子</h4><p class="text-xs text-gray-500">百年老店，像水煮蛋一樣可愛的棉花糖甜點。</p></div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-yellow-50 p-4 rounded-xl border border-yellow-200 text-sm text-yellow-800 text-center mt-4">
+                💡 <b>小撇步：</b> 大部分伴手禮在 <b>福岡機場免稅店</b> 都買得到，建議最後一天再一次買齊！
             </div>
         </div>
     </template>
@@ -719,7 +765,7 @@
         };
 
         // --- Logic ---
-        // Force update to v49 to ensure new data (Corrected 2025 weekdays again) is loaded
+        // Force update to v53 to ensure new data (removed edit buttons) is loaded
         let storedData = JSON.parse(localStorage.getItem('kyushu_trip_data'));
         let tripData = defaultTripData; // Default to new data for this version to force update
 
@@ -730,7 +776,6 @@
         let currentView = 'itinerary'; // Default view changed to itinerary
         let currentDayIndex = 0;
         let activeFilter = 'all';
-        let isEditMode = false;
 
         const mainContent = document.getElementById('main-content');
         const dayNav = document.getElementById('day-nav');
@@ -806,48 +851,6 @@
             switchView('itinerary');
         };
 
-        // --- Editing Logic ---
-        window.toggleEditMode = () => {
-            isEditMode = !isEditMode;
-            const btn = document.getElementById('edit-toggle-btn');
-            if (isEditMode) {
-                btn.classList.replace('bg-blue-600', 'bg-green-600');
-                btn.innerText = '💾 儲存';
-            } else {
-                btn.classList.replace('bg-green-600', 'bg-blue-600');
-                btn.innerText = '✏️ 編輯';
-                saveData();
-            }
-            
-            // Re-render Header Title (Global Update)
-            renderHeaderTitle();
-
-            // Refresh current view
-            if (currentView === 'info') renderInfo();
-            else if (currentView === 'itinerary') renderItinerary(currentDayIndex);
-            else if (currentView === 'todo') renderTodo();
-        };
-
-        function saveData() {
-            localStorage.setItem('kyushu_trip_data', JSON.stringify(tripData));
-        }
-        
-        function renderHeaderTitle() {
-             const titleContainer = document.getElementById('main-title-container');
-             if(isEditMode) {
-                 titleContainer.innerHTML = `
-                    <input type="text" value="${tripData.mainTitle}" class="edit-input text-4xl font-bold text-yellow-900 text-center mb-2" onchange="updateGlobal('mainTitle', this.value)">
-                    <input type="text" value="${tripData.subTitle}" class="edit-input text-lg text-gray-600 text-center" onchange="updateGlobal('subTitle', this.value)">
-                 `;
-             } else {
-                 titleContainer.innerHTML = `
-                    <h1 class="text-4xl font-bold text-yellow-900 mb-2 tracking-wide">${tripData.mainTitle}</h1>
-                    <p class="text-gray-600 text-lg font-medium">${tripData.subTitle}</p>
-                    <p class="text-orange-500 text-md font-bold mt-2">2025.1.22 (四) - 1.27 (二)</p>
-                 `;
-             }
-        }
-
         // --- Todo List Functions ---
         function renderTodo() {
             const template = document.getElementById('todo-template').content.cloneNode(true);
@@ -859,11 +862,7 @@
                     const lineThrough = item.done ? 'line-through text-gray-400' : 'text-gray-700';
                     const bg = item.done ? 'bg-green-500 border-green-500' : 'border-gray-300 bg-white';
                     
-                    let contentHtml = isEditMode
-                        ? `<input type="text" value="${item.text}" class="edit-input flex-1" onchange="updateTodoText('${category}', ${idx}, this.value)">`
-                        : `<span onclick="toggleTodo('${category}', ${idx})" class="${lineThrough} flex-1 cursor-pointer font-medium">${item.text}</span>`;
-
-                    let deleteBtn = isEditMode ? `<span class="text-red-500 cursor-pointer ml-2 text-xs" onclick="deleteTodo('${category}', ${idx})">❌</span>` : '';
+                    let contentHtml = `<span onclick="toggleTodo('${category}', ${idx})" class="${lineThrough} flex-1 cursor-pointer font-medium">${item.text}</span>`;
 
                     return `
                     <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg group">
@@ -871,17 +870,9 @@
                             ${item.done ? '✓' : ''}
                         </div>
                         ${contentHtml}
-                        ${deleteBtn}
                     </div>
                     `;
                 }).join('');
-
-                const addInputHtml = `
-                    <div class="mt-3 pt-3 border-t border-gray-100 flex gap-2">
-                        <input type="text" id="add-todo-${category}" placeholder="新增項目..." class="text-sm border rounded px-2 py-1 flex-1" onkeypress="if(event.key==='Enter') addTodoToCategory('${category}')">
-                        <button onclick="addTodoToCategory('${category}')" class="bg-green-100 text-green-700 px-3 py-1 rounded text-sm font-bold hover:bg-green-200">+</button>
-                    </div>
-                `;
 
                 return `
                 <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm hover-card">
@@ -892,89 +883,44 @@
                     <div class="space-y-2">
                         ${listHtml || '<p class="text-gray-400 text-sm italic">尚無待辦事項</p>'}
                     </div>
-                    ${addInputHtml}
                 </div>
                 `;
             }).join('');
 
             mainContent.innerHTML = '';
             mainContent.appendChild(template);
-            
-            // Render Header Title initially
-            renderHeaderTitle();
         }
 
         window.toggleTodo = (category, index) => {
-            if (isEditMode) return;
             tripData.todoList[category][index].done = !tripData.todoList[category][index].done;
             saveData();
             renderTodo();
         };
         
-        window.updateTodoText = (category, index, val) => {
-            tripData.todoList[category][index].text = val;
-        };
-
-        window.addTodoToCategory = (category) => {
-            const input = document.getElementById(`add-todo-${category}`);
-            const val = input.value.trim();
-            if (!val) return;
-            
-            tripData.todoList[category].push({ text: val, done: false });
-            input.value = '';
-            saveData();
-            renderTodo();
-        };
-
-        window.deleteTodo = (category, index) => {
-            if(confirm('確定要刪除這個待辦事項嗎？')) {
-                tripData.todoList[category].splice(index, 1);
-                saveData();
-                renderTodo();
-            }
-        }
-
         // --- Render Views ---
 
         function renderVjw() {
              const template = document.getElementById('vjw-template').content.cloneNode(true);
              mainContent.innerHTML = '';
              mainContent.appendChild(template);
-             renderHeaderTitle();
         }
 
         function renderInfo() {
             const template = document.getElementById('info-template').content.cloneNode(true);
-            
-            if(isEditMode) {
-                 template.getElementById('intro-text-container').innerHTML = `
-                    <input type="text" value="${tripData.introTitle}" class="edit-input text-3xl font-bold text-orange-900 mb-4" onchange="updateGlobal('introTitle', this.value)">
-                    <textarea class="edit-input edit-textarea text-lg" onchange="updateGlobal('introDesc', this.value)">${tripData.introDesc}</textarea>
-                 `;
-            } else {
-                 template.getElementById('intro-text-container').innerHTML = `
-                    <h2 class="text-3xl font-bold text-orange-900 mb-4">${tripData.introTitle}</h2>
-                    <p class="text-orange-800 opacity-90 leading-relaxed text-lg">${tripData.introDesc}</p>
-                 `;
-            }
-
             mainContent.innerHTML = '';
             mainContent.appendChild(template);
-            renderHeaderTitle();
         }
 
         function renderSouvenir() {
             const template = document.getElementById('souvenir-template').content.cloneNode(true);
             mainContent.innerHTML = '';
             mainContent.appendChild(template);
-            renderHeaderTitle();
         }
 
         function renderTransport() {
             const template = document.getElementById('transport-template').content.cloneNode(true);
             mainContent.innerHTML = '';
             mainContent.appendChild(template);
-            renderHeaderTitle();
         }
 
         function renderItinerary(dayIndex) {
@@ -982,13 +928,8 @@
             const template = document.getElementById('itinerary-template').content.cloneNode(true);
             
             // Header
-            if (isEditMode) {
-                template.querySelector('#day-title').innerHTML = `<input type="text" value="${dayData.title}" class="edit-input text-2xl font-bold" onchange="updateDay(${dayIndex}, 'title', this.value)">`;
-                template.querySelector('#day-desc').innerHTML = `<textarea class="edit-input edit-textarea" onchange="updateDay(${dayIndex}, 'focus', this.value)">${dayData.focus}</textarea>`;
-            } else {
-                template.querySelector('#day-title').innerText = `Day ${dayData.day}: ${dayData.title}`;
-                template.querySelector('#day-desc').innerText = dayData.focus;
-            }
+            template.querySelector('#day-title').innerText = `Day ${dayData.day}: ${dayData.title}`;
+            template.querySelector('#day-desc').innerText = dayData.focus;
             template.querySelector('#day-tags').innerHTML = dayData.tags.map(t => 
                 `<span class="bg-white/80 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-gray-600 shadow-sm">#${t}</span>`
             ).join('');
@@ -1005,89 +946,34 @@
                 if (act.type === 'sightseeing') { typeColor = 'bg-green-50 text-green-600'; typeBorder = 'border-green-200'; }
                 if (act.type === 'transport') { typeColor = 'bg-blue-50 text-blue-600'; typeBorder = 'border-blue-200'; }
                 
-                let contentHtml = '';
-                if (isEditMode) {
-                    contentHtml = `
-                        <div class="space-y-2">
-                            <div class="flex gap-2">
-                                <input type="text" value="${act.time}" class="edit-input w-20" onchange="updateActivity(${dayIndex}, ${actIdx}, 'time', this.value)">
-                                <select class="edit-input w-24" onchange="updateActivity(${dayIndex}, ${actIdx}, 'icon', this.value)">
-                                    <option value="🍜" ${act.icon==='🍜'?'selected':''}>🍜</option>
-                                    <option value="🚄" ${act.icon==='🚄'?'selected':''}>🚄</option>
-                                    <option value="🏨" ${act.icon==='🏨'?'selected':''}>🏨</option>
-                                    <option value="📸" ${act.icon==='📸'?'selected':''}>📸</option>
-                                    <option value="🍵" ${act.icon==='🍵'?'selected':''}>🍵</option>
-                                    <option value="🛍️" ${act.icon==='🛍️'?'selected':''}>🛍️</option>
-                                    <option value="🍽️" ${act.icon==='🍽️'?'selected':''}>🍽️</option>
-                                    <option value="🥩" ${act.icon==='🥩'?'selected':''}>🥩</option>
-                                    <option value="🚂" ${act.icon==='🚂'?'selected':''}>🚂</option>
-                                    <option value="👹" ${act.icon==='👹'?'selected':''}>👹</option>
-                                    <option value="🛶" ${act.icon==='🛶'?'selected':''}>🛶</option>
-                                    <option value="🍱" ${act.icon==='🍱'?'selected':''}>🍱</option>
-                                    <option value="⛩️" ${act.icon==='⛩️'?'selected':''}>⛩️</option>
-                                    <option value="🚶" ${act.icon==='🚶'?'selected':''}>🚶</option>
-                                    <option value="🍣" ${act.icon==='🍣'?'selected':''}>🍣</option>
-                                    <option value="🦢" ${act.icon==='🦢'?'selected':''}>🦢</option>
-                                    <option value="☕" ${act.icon==='☕'?'selected':''}>☕</option>
-                                    <option value="🗼" ${act.icon==='🗼'?'selected':''}>🗼</option>
-                                    <option value="🥘" ${act.icon==='🥘'?'selected':''}>🥘</option>
-                                    <option value="👋" ${act.icon==='👋'?'selected':''}>👋</option>
-                                    <option value="🛬" ${act.icon==='🛬'?'selected':''}>🛬</option>
-                                    <option value="🎁" ${act.icon==='🎁'?'selected':''}>🎁</option>
-                                    <option value="✈️" ${act.icon==='✈️'?'selected':''}>✈️</option>
-                                    <option value="🚇" ${act.icon==='🚇'?'selected':''}>🚇</option>
-                                    <option value="🚉" ${act.icon==='🚉'?'selected':''}>🚉</option>
-                                    <option value="🚌" ${act.icon==='🚌'?'selected':''}>🚌</option>
-                                    <option value="🎨" ${act.icon==='🎨'?'selected':''}>🎨</option>
-                                    <option value="🍰" ${act.icon==='🍰'?'selected':''}>🍰</option>
-                                    <option value="🍲" ${act.icon==='🍲'?'selected':''}>🍲</option>
-                                    <option value="🌸" ${act.icon==='🌸'?'selected':''}>🌸</option>
-                                    <option value="🍢" ${act.icon==='🍢'?'selected':''}>🍢</option>
-                                    <option value="🥚" ${act.icon==='🥚'?'selected':''}>🥚</option>
-                                    <option value="🚕" ${act.icon==='🚕'?'selected':''}>🚕</option>
-                                    <option value="🌅" ${act.icon==='🌅'?'selected':''}>🌅</option>
-                                    <option value="🫖" ${act.icon==='🫖'?'selected':''}>🫖</option>
-                                </select>
-                            </div>
-                            <input type="text" value="${act.title}" class="edit-input font-bold" onchange="updateActivity(${dayIndex}, ${actIdx}, 'title', this.value)">
-                            <textarea class="edit-input edit-textarea" onchange="updateActivity(${dayIndex}, ${actIdx}, 'desc', this.value)">${act.desc}</textarea>
-                            <input type="text" value="${act.image || ''}" placeholder="圖片網址(選填)" class="edit-input text-xs" onchange="updateActivity(${dayIndex}, ${actIdx}, 'image', this.value)">
-                            <select class="edit-input" onchange="updateActivity(${dayIndex}, ${actIdx}, 'type', this.value)">
-                                <option value="food" ${act.type==='food'?'selected':''}>美食</option>
-                                <option value="sightseeing" ${act.type==='sightseeing'?'selected':''}>景點</option>
-                                <option value="transport" ${act.type==='transport'?'selected':''}>交通</option>
-                                <option value="stay" ${act.type==='stay'?'selected':''}>住宿</option>
-                            </select>
-                        </div>
-                        <div class="delete-btn" onclick="deleteActivity(${dayIndex}, ${actIdx})">✕</div>
-                    `;
-                } else {
-                    let imageHtml = '';
-                    if (act.image) {
-                        imageHtml = `
-                        <div class="mt-3 h-32 w-full sketch-img-container">
-                            <img src="${act.image}" alt="${act.title}" class="ghibli-filter" onerror="imgError(this)">
-                        </div>`;
-                    }
-                    contentHtml = `
-                        <h4 class="font-bold text-gray-800 text-lg">${act.title}</h4>
-                        <p class="text-sm text-gray-500 mt-1 leading-relaxed">${act.desc}</p>
-                        ${imageHtml}
-                        <span class="inline-block mt-2 text-[10px] uppercase font-bold px-2 py-0.5 rounded ${typeColor}">
-                            ${act.type === 'food' ? '美食' : act.type === 'transport' ? '交通' : act.type === 'stay' ? '住宿' : '觀光'}
-                        </span>
-                    `;
+                let imageHtml = '';
+                // Since user requested no placeholder images for COMICO, we only show images if they are real URLs or remove logic if all placeholders are gone
+                // Keeping logic but ensuring data has no placeholders
+                if (act.image && !act.image.includes('placehold.co')) {
+                    imageHtml = `
+                    <div class="mt-3 h-32 w-full sketch-img-container">
+                        <img src="${act.image}" alt="${act.title}" class="ghibli-filter" onerror="imgError(this)">
+                    </div>`;
                 }
+                
+                let contentHtml = `
+                    <h4 class="font-bold text-gray-800 text-lg">${act.title}</h4>
+                    <p class="text-sm text-gray-500 mt-1 leading-relaxed">${act.desc}</p>
+                    ${imageHtml}
+                    <span class="inline-block mt-2 text-[10px] uppercase font-bold px-2 py-0.5 rounded ${typeColor}">
+                        ${act.type === 'food' ? '美食' : act.type === 'transport' ? '交通' : act.type === 'stay' ? '住宿' : '觀光'}
+                    </span>
+                `;
 
                 return `
                 <div class="relative pl-2 md:pl-2 group mb-4">
                     <div class="absolute left-0 top-0 w-12 md:w-12 text-center">
-                        <span class="text-sm font-bold text-gray-400 font-mono group-hover:text-orange-500 transition">${isEditMode ? '' : act.time}</span>
+                        <span class="text-sm font-bold text-gray-400 font-mono group-hover:text-orange-500 transition">${act.time}</span>
                     </div>
                     <div class="absolute left-[50px] md:left-[58px] top-1.5 w-3 h-3 bg-white border-2 border-orange-300 rounded-full z-10 group-hover:scale-125 group-hover:bg-orange-500 transition"></div>
                     <div class="bg-white rounded-xl p-4 border ${typeBorder} shadow-sm hover-card ml-[60px] md:ml-[70px] relative">
                         <div class="flex items-start gap-3">
-                            ${!isEditMode ? `<span class="text-2xl">${act.icon}</span>` : ''}
+                            <span class="text-2xl">${act.icon}</span>
                             <div class="flex-1">
                                 ${contentHtml}
                             </div>
@@ -1096,65 +982,28 @@
                 </div>
             `}).join('');
 
-            // Add Activity Button
-            if (isEditMode) {
-                template.getElementById('add-activity-btn').classList.remove('hidden');
-            }
-
             // Footer Nav
             const navFooter = template.querySelector('#timeline-nav-footer');
-            if (!isEditMode) {
-                let footerHtml = '';
-                if (dayIndex > 0) {
-                    footerHtml += `<button onclick="selectDay(${dayIndex - 1})" 
-                        class="flex items-center gap-2 text-gray-500 hover:text-orange-600 transition group cursor-pointer">
-                        <span class="text-lg group-hover:-translate-x-1 transition">←</span>
-                        <div class="text-left">
-                            <div class="text-xs font-bold text-gray-400">上一天</div>
-                            <div class="text-sm font-bold">Day ${tripData.days[dayIndex - 1].day}</div>
-                        </div>
-                    </button>`;
-                } else { footerHtml += `<div></div>`; }
-                if (dayIndex < tripData.days.length - 1) {
-                    footerHtml += `<button onclick="selectDay(${dayIndex + 1})" 
-                        class="flex items-center gap-3 bg-orange-100 hover:bg-orange-200 text-orange-800 px-5 py-3 rounded-xl transition group shadow-sm cursor-pointer transform hover:scale-105 active:scale-95"><div class="text-right"><div class="text-xs font-bold text-orange-600 uppercase tracking-wide">前往下一天</div><div class="text-lg font-bold">Day ${tripData.days[dayIndex + 1].day}</div></div><span class="text-xl group-hover:translate-x-1 transition">→</span></button>`;
-                }
-                navFooter.innerHTML = footerHtml;
-            } else {
-                navFooter.innerHTML = '';
+            let footerHtml = '';
+            if (dayIndex > 0) {
+                footerHtml += `<button onclick="selectDay(${dayIndex - 1})" 
+                    class="flex items-center gap-2 text-gray-500 hover:text-orange-600 transition group cursor-pointer">
+                    <span class="text-lg group-hover:-translate-x-1 transition">←</span>
+                    <div class="text-left">
+                        <div class="text-xs font-bold text-gray-400">上一天</div>
+                        <div class="text-sm font-bold">Day ${tripData.days[dayIndex - 1].day}</div>
+                    </div>
+                </button>`;
+            } else { footerHtml += `<div></div>`; }
+            if (dayIndex < tripData.days.length - 1) {
+                footerHtml += `<button onclick="selectDay(${dayIndex + 1})" 
+                    class="flex items-center gap-3 bg-orange-100 hover:bg-orange-200 text-orange-800 px-5 py-3 rounded-xl transition group shadow-sm cursor-pointer transform hover:scale-105 active:scale-95"><div class="text-right"><div class="text-xs font-bold text-orange-600 uppercase tracking-wide">前往下一天</div><div class="text-lg font-bold">Day ${tripData.days[dayIndex + 1].day}</div></div><span class="text-xl group-hover:translate-x-1 transition">→</span></button>`;
             }
+            navFooter.innerHTML = footerHtml;
 
             mainContent.innerHTML = '';
             mainContent.appendChild(template);
-            renderHeaderTitle();
         }
-
-        // --- Data Update Functions ---
-        window.updateGlobal = (field, value) => {
-            tripData[field] = value;
-        };
-
-        window.updateDay = (dayIndex, field, value) => {
-            tripData.days[dayIndex][field] = value;
-        };
-
-        window.updateActivity = (dayIndex, actIndex, field, value) => {
-            tripData.days[dayIndex].activities[actIndex][field] = value;
-        };
-
-        window.deleteActivity = (dayIndex, actIndex) => {
-            if(confirm('確定要刪除這個行程嗎？')) {
-                tripData.days[dayIndex].activities.splice(actIndex, 1);
-                renderItinerary(dayIndex);
-            }
-        };
-
-        window.addActivity = () => {
-            tripData.days[currentDayIndex].activities.push({
-                time: "12:00", title: "新行程", type: "sightseeing", desc: "請輸入說明", icon: "📍"
-            });
-            renderItinerary(currentDayIndex);
-        };
 
         // --- AI Chat Logic ---
         const apiKey = ""; 
